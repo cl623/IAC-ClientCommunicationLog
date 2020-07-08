@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+
+    <base target="_top">
+    <?!= include("form_css"); ?>
+  </head>
+  
+  <body>
+    <?var url = getScriptUrl();?>
+    <div class="w3-light-grey">
+      <div id="myBar" class="w3-container w3-dark-gray" style="height:24px;width:1%; "></div>
+    </div>
+    <h1><img src='https://le-cdn.website-editor.net/890182a9e4384ae6930cd502f9f32152/dms3rep/multi/opt/IAC+FINAL+%7C+Large-480w.png' height= 70px; style="margin: 3px;"> Client Communication Log </h1>
+    <p id=user> </p>
+<!-- ============ TEST SNIPPETS === Comment out corresponding functions in form_js [3-19][56-59]==============
+    <button id="btn" title="Lookup Client Info"> Search </button>
+    <div id="output"></div>
+    <div id="output2"></div>
+<!-- ========================================================================================================-->
+     
+     
+    <div class="header" id=myHeader> <!-- Heading Section for Client Lookup and User Buttons -->
+      <div>
+        <label for="clientName" style="color:White;">Client List: </label>     
+        <select class="select" id="clientName" style="width:20%;" onchange='clientInfo(this)'>
+        <option disabled selected>Choose Client</option>
+        <option>All Clients</option>
+        </select> 
+       <!-- <strong id=cid> ID</strong> -->
+         <button class="btn btn-primary" onclick="window.open(href='<?=url?>?page=Form','_blank')" style="float:right;">Client Communication Form</button>
+      </div>
+    </div>                <!-- End Heading Section-->
+    
+    
+    <!------------------- Third Body Container ---------------------->
+    
+    <div>
+    <table id=commTable class='table sticky'  style='overflow-x: auto'>
+      <col style="width:6%">
+      <col style="width:8%">
+      <col style="width:10%">
+      <col style="width:4%">
+      <col style="width:6%">
+      <col style="width:6%">
+      <col style="width:6%">
+      <col style="width:45%">
+      <col style="width:12%">
+    <thead>      
+<!--
+      <tr class=longHeader>
+        <th>Client ID</th>
+        <th>Client Name</th>
+        <th>Staff Username</th>
+        <th>Entity Contacted</th>
+        <th>Contact Person's Name</th>
+        <th>Communication Type</th>
+        <th>Date of Communication</th>
+        <th>Time of Communication</th>
+        <th>Duration of Communication (HH:MM)</th>
+        <th>Communication Notes</th>
+        <th>Documents Received</th>
+      </tr>
+-->
+      <tr class=shortHeader>
+        <th title='Staff Username'>Staff</th>
+        <th title='Entity Contacted'>Entity Contacted</th>
+        <th title="Contact Person's Name">Contact Person's Name</th>
+        <th title='Communication Type'>Type</th>
+        <th title='Date of Communication'>Date</th>
+        <th title='Time of Communication'>Time</th>
+        <th title='Duration of Communication (Minutes)'>Duration (Min)</th>
+        <th title='Communication Notes'>Notes</th>
+        <th title='Documents Received'>Doc(s) Received</th>
+      </tr>
+    
+    </thead>
+      <tbody class="content">
+      <tr>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+      </tr>
+      </tbody>
+    </table>
+
+    </div> <!-- End Third Body Container -->
+    <div id=SuccessMsg class="myAlert-top alert alert-success" style="display:none">
+      <strong>Success!</strong> <span id="spnMsg"></span>
+    </div>
+    <div id=ErrorMsg class="myAlert-top alert alert-danger" style="display:none">
+      <strong>Error Loading Failed: Please refresh. If problem persists please contact Joe Lison @ jlison@innovativeautism.org</strong> <span id="spnEMsg"></span>
+    </div>
+   
+  <?!= include("form_js"); ?>
+
+  </body>
+</html>
+

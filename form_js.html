@@ -1,0 +1,258 @@
+<script>
+  var width = 1;
+  var data;
+  var id;
+  var user;
+  var staffId;
+  var whitelist = ['claggui@innovativeautism.org','jlaggui@innovativeautism.org','dwalker@innovativeautism.org','jlison@innovativeautism.org','cfaymartin@innovativeautism.org','llanglois@innovativeautism.org','csanchez@innovativeautism.org','sdonarumo@innovativeautism.org','cdasilva@innovativeautism.org','elison@innovativeautism.org','jnocella@innovativeautism.org']
+ //=================================================================================================================================================================
+ //-----------------------------------Progress Bar--------------------------------------------------------------------------------------------------------------
+ //=================================================================================================================================================================
+
+var SuccessTime = 3000;
+function move() {
+  width=1;
+  $("#myBar").show();
+  var elem = document.getElementById("myBar");
+  var id = setInterval(frame, 60);
+  function frame() {
+    if (width >= 100) {
+      clearInterval(id);
+    } else {
+      width++;
+      elem.style.width = width + '%';
+    }
+  }
+}
+
+function showMessage(msg){
+    $("#clientName").prop( "disabled", false );
+    $("#user").html("Logged in as: <strong>" + user + "</strong>");
+	$("#SuccessMsg").show(800);
+    width=100;
+    $("#myBar").hide();
+	$("#spnMsg").text(msg);
+	  setTimeout(function(){
+		$(".myAlert-top").hide(800); 
+	  }, SuccessTime);
+}
+function showEMessage(msg){
+	$("#ErrorMsg").show(800);
+    $("#user").html("Logged in as: <strong>" + user + "</strong>");
+    $("#myBar").hide();
+	$("#spnEMsg").text(msg);
+	  setTimeout(function(){
+		$(".myAlert-top").hide(1500); 
+	  }, SuccessTime);
+}
+
+ //=================================================================================================================================================================
+ //-----------------------------------Client Name List--------------------------------------------------------------------------------------------------------------
+ //=================================================================================================================================================================
+ 
+/*
+ *
+ * Fill select box with client names from spreadsheet
+ * @param {String []} clientList Array from getClientName()
+ *
+ */
+ $(document).ready(function(){
+  move();
+  $('.select').select2({
+    placeholder:'wweeee',
+    width:'25%'
+  });
+  google.script.run.withSuccessHandler(setUser).getUser();
+  setInterval(refreshData, 60000);  
+  });
+  
+  function clientInfo(){
+    var clientId = $("#clientName option:selected").val();
+    id = clientId;
+    google.script.run.withSuccessHandler(displayLogs).loadLogs(clientId,staffId);
+  }
+  
+  function displayLogs(data){
+    $('#commTable tbody tr').remove();
+    var logs = JSON.parse(data);
+    $.each(logs, function(index,object){
+      var tr = $('<tr></tr>');
+      $.each(object,function(key,value){
+        if(key=='DurationOfComm'){
+          value = Math.ceil(value/60);
+        }
+        $('<td id="'+key+'" >'+value+'</td>').appendTo(tr);
+      });
+      
+      tr.appendTo('#commTable tbody');
+      
+    });
+  }
+  
+  function setStaffId(data){
+    var info = JSON.parse(data);
+    $.each(info,function(index,object){
+      if(object['IacEmail'] == user){
+        staffId = object['StaffId'];
+      }
+    });
+    google.script.run.withSuccessHandler(selectFill).getClientNameDbLog(staffId);
+  }
+  
+  function selectFill(list){
+    var names = JSON.parse(list);
+    var clientList = [];
+    
+    $.each(names,function(index,row){
+        var fillName = row['Name'];
+        var fillClientId = row["ClientId"];
+        var o = new Option( fillName+' | '+fillClientId, fillClientId);
+        $("#clientName").append(o);
+        clientList.push(fillName);
+        });
+    
+    if(clientList.length > 2){
+      showMessage('Client data loaded');
+    }
+    else{
+      showEMessage('No clients to view. ');
+    }
+  }
+  
+  function refreshData(){
+    
+    clientInfo();
+//    google.script.run.withSuccessHandler(newData).getClientName();
+//    function newData(bulk){
+//      data=bulk;
+//      clientInfo();
+//    }
+  }
+
+  function setUser(email){
+    user = email;
+    google.script.run.withSuccessHandler(setStaffId).loadStaff();
+  }
+  
+  
+//  function selectFill(bulk){
+//    data = bulk;
+//    var clientList=[]
+//    
+//    if(whitelist.includes(user))
+//      for(var i=0; i < data.length; i++){
+//        if(data[i][2] != '')
+//        clientList.push(data[i]);
+//      }
+//    else{
+//      for(var i = 0; i < data.length; i++){
+//        if(user == data[i][1])
+//          clientList.push(data[i])
+//      }
+//    }
+//  
+//    if(clientList.length > 2){
+//      showMessage('Client data loaded');
+//    }
+//    else{
+//      showEMessage('No clients to view. ');
+//    }
+//    
+//    var c = []
+//    for(var i =0; i < clientList.length; i++){
+//      c.push(clientList[i][2])
+//    }
+//    var clients = unique(c);
+//
+//    // https://stackoverflow.com/questions/740195/adding-options-to-a-select-using-jquery
+//    for ( var i = 0; i < clients.length; i++){
+//      var o = new Option(clients[i], [i]);
+//      /// jquerify the DOM object 'o' so we can use the html method
+//      //clientList[i][3] Second Index is location of FULL NAME in the spreadsheet. CHANGE ACCORDINGLY
+//      $(o).html(clients[i]);
+//      $("#clientName").append(o);
+//    }
+//  }
+ 
+ 
+ //https://jsfiddle.net/Guffa/Askwb/
+//  function unique(list) {
+//    var result = [];
+//    $.each(list, function(i, e) {
+//        if ($.inArray(e, result) == -1) result.push(e);
+//    });
+//    return result.sort();
+//  }
+ 
+  
+//  function clientInfo(){ 
+//  var clientName = $("#clientName option:selected").text();
+//  var list = []
+//    if(clientName == "All Clients"){
+//    for(var i=0; i < data.length; i++){
+//      if(user == data[i][1])
+//        list.push(data[i])
+//    }
+//  }
+//  else{
+//  for(var i=0; i < data.length;i++){
+//    if(data[i][2] == clientName){
+//      list.push(data[i]);
+//    }
+//  }
+//  }
+//    var myData = list.slice().sort(function(a,b){
+//    
+//    
+//    var aSize = new Date(a[6]);
+//    var bSize = new Date(b[6]);
+//    var aLow = new Date(a[7]);
+//    var bLow = new Date(b[7]);
+//
+//    if(aSize == bSize)
+//    {
+//        return (aLow < bLow) ? 1 : (aLow > bLow) ? -1 : 0;
+//    }
+//    else
+//    {
+//        return (aSize < bSize) ? 1 : -1;
+//    }
+//    
+//    });
+//    
+//    
+//    
+//    $("#commTable tbody").find("tr:gt(0)").remove();
+//    $("#commTable tbody tr:first-child").empty();
+//    for(var i=0; i < myData.length; i++){
+//      $("#commTable tbody tr:last").after("<tr><td>"+ myData[i][12]+"</td>" +   //Staff User Name
+//                                          "<td>"+ myData[i][3]+"</td>" +    //Entity Contacted
+//                                          "<td>"+ myData[i][4]+"</td>" +    //Contact Person's Name
+//                                          "<td>"+ myData[i][5]+"</td>" +    //Communication Type
+//                                          "<td>"+ myData[i][6]+"</td>" +    //Date of Communication
+//                                          "<td>"+ myData[i][7]+"</td>" +    //Time of Communication
+//                                          "<td>"+ myData[i][8]+"</td>" +   //Duration of Communication
+//                                          "<td>"+ myData[i][10]+"</div></td>" +    //Communication Notes
+//                                          "<td>"+ myData[i][9]+"</td>" +    //Documents Recieved
+//                                          "</tr>")
+//    }
+//    
+//    //ID IS NOT A COLUMN IN SHEET...
+//    if(myData[0][11] != '')
+//      $("#cid").html("Client ID: "+myData[0][11])
+//    else
+//      $("#cid").html("Prospective Client")
+//      
+//  }
+  
+  function submitForm(){
+    var data = $('#form').serializeArray().reduce(function(obj, item) {
+    obj[item.name] = item.value;
+    return obj;
+    }, {});
+    console.log(data);
+  }
+  
+  
+  
+</script>

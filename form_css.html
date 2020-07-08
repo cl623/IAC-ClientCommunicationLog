@@ -1,0 +1,153 @@
+    <style>
+      .toLog{
+        -webkit-appearance: button;
+        -moz-appearance: button;
+        appearance: button;
+
+        text-decoration: none;
+        color: initial;
+        text-align:right;
+      }
+      .missing{
+        background-color: #ffcccc;
+      }
+      .question{
+      padding: 35px;
+      background-color: White;
+      border: 1px solid Gray;
+      margin-top: 15px;
+      }
+      .question label{
+      padding: 3px;
+      }
+      .question span{
+      color: Red;
+      }
+    
+      strong{
+      padding: 0 3px;
+      }
+    
+      body{
+      padding: 40px;
+      background-color: #fafafa;
+      }
+      
+      .form{
+      max-width: 800px;
+      align-items: center;
+      justify-content: center;
+      margin-left: auto;
+      margin-right: auto;
+      }
+      
+      myAlert-top{
+        position: fixed;
+        top: 5px; 
+        left:2%;
+        width: 96%;
+        }
+
+      table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+      }
+      
+      /*
+     table tr{
+transition: all .18s ease-in-out;
+}
+
+tr:hover {
+background-color: #f7f7f7;
+transform:  scale(1.03); 
+box-shadow: 2px 2px 2px 2px #e6e6e6; 
+}
+    */  
+      td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+      }
+      
+      tr:nth-child(even) {
+        background-color:#f0f0f0;
+      }      
+      
+      .table.sticky th{
+      position: -webkit-sticky;
+      position: sticky;
+      top: 55px;
+      background-color: #666;
+      color: White;
+      } 
+      
+      .header{
+      position: -webkit-sticky;
+      position: sticky;
+      top:0px;
+      background-color: Gray;
+      padding: 15px;
+      }
+      /* Safari */
+      @-webkit-keyframes spin {
+        0% { -webkit-transform: rotate(0deg); }
+        100% { -webkit-transform: rotate(360deg); }
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      
+ /* style sheet for "letter" printing */
+ @media print and (width: 8.5in) and (height: 11in) {
+    @page {
+        margin: 1in;
+    }
+    .header{
+    display:none;
+    }
+    .table.sticky th{
+    display: none;
+    }
+    body{
+    padding:0px;
+    }
+ }
+ 
+.button {
+  cursor:pointer;
+  background-color: #C0C0C0;
+  box-shadow: 0 5px 0 black;
+  color: white;
+  padding: 1em 1.5em;
+  position: relative;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.button:hover {
+  background-color: #808080;
+}
+
+.button:active {
+  box-shadow: none;
+  top: 5px;
+}
+.fa{
+  color: #FFD700;
+}
+.modalHeader,
+h2{
+  text-align:center;
+  display: block;
+
+}
+
+.modalContainer{
+  margin: auto;
+  padding: 5px;
+}
+    </style>

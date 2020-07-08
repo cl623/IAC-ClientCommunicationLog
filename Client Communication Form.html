@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+
+    <base target="_top">
+    <?!= include("form_css"); ?>
+  </head>
+  
+  <body class=form>
+      <?var url = getScriptUrl();?>
+      <div class="w3-light-grey">
+      <div id="myBar" class="w3-container w3-dark-gray" style="height:24px;width:1%; "></div>
+    </div>
+    
+    <h1><img src='https://le-cdn.website-editor.net/890182a9e4384ae6930cd502f9f32152/dms3rep/multi/opt/IAC+FINAL+%7C+Large-480w.png' height= 70px; style="margin: 3px;"> Client Communication Log </h1>
+    <p id=user> </p>
+     
+    <div style="background-color: Gray; border: 1px solid Black; padding: 15px;" id=myHeader> <!-- Heading Section for Client Lookup and User Buttons -->
+      <div>
+         Use this form to record all communication between the client's family, referring provider or other care providers.
+         <br><br>
+         The communications can later be viewed on the Client Communication Log:
+         <button class="btn btn-primary" onclick="window.open(href='<?=url?>?page=Log','_blank')">Client Communication Form</button>
+        <br><br>
+      </div>
+    </div>                <!-- End Heading Section-->
+    <form id=form>
+    <div class=question>
+    <label for="client" >Client: </label>     
+        <select class="select" id="clientNames" style="width:50%;">
+        <option disabled selected>Choose Client</option>
+        </select> 
+    </div>
+    <div class=question>
+      Entity Contacted<span>*</span>
+      <br>
+      <label>
+      <input type='radio' name='entityContacted' value="Family Member" onclick="disableOther(otherEntityCheck, otherEntity)" required> Family Member
+      </label>
+      <br>
+      <label>
+      <input type='radio' name='entityContacted' value="Primary Care Provider" onclick="disableOther(otherEntityCheck, otherEntity)"> Primary Care Provider
+      </label>
+      <br>
+      <label>
+      <input type='radio' name='entityContacted' value="Diagnosing Physician" onclick="disableOther(otherEntityCheck, otherEntity)"> Diagnosing Physician
+      </label>
+      <br>
+      <label>
+      <input type='radio' name='entityContacted' value="Early Intervention Agency" onclick="disableOther(otherEntityCheck, otherEntity)"> Early Intervention Agency
+      </label>
+      <br>
+      <label>
+      <input type='radio' name='entityContacted' value="Referring Provider" onclick="disableOther(otherEntityCheck, otherEntity)"> Referring Provider
+      </label>
+      <br>
+      <label>
+      <input type='radio' name='entityContacted' value="DCF" onclick="disableOther(otherEntityCheck, otherEntity)"> DCF
+      </label>
+      <br>
+      <label>
+      <input type='radio' name='entityContacted' value="Family Member" onclick="disableOther(otherEntityCheck, otherEntity)"> Entity Contacted
+      </label>
+      <br>
+      <label>
+      <input type='radio' name='entityContacted' value="Other" id=otherEntityCheck onclick="disableOther(this, otherEntity)"> Other <input type=text id='otherEntity' maxlength="400" disabled>
+      </label>
+    </div>
+    
+    <div class=question>
+    Contact Person's Name<span>*</span>
+    <br>
+    <input type=text placeholder='Your Answer' name=contactName maxlength="400" required >
+    </div>
+    
+    <div class=question>
+    Communication Type<span>*</span>
+    <br>
+    <label>
+    <input type='radio' name='communicationType' value='Phone' required> Phone
+    </label>
+    <br>
+    <label>
+    <input type='radio' name='communicationType' value='Voicemail'> Voicemail
+    </label>
+    <br>
+    <label>
+    <input type='radio' name='communicationType' value='Email'> Email
+    </label>
+    <br>
+    <label>
+    <input type='radio' name='communicationType' value='Fax'> Fax
+    </label>
+    <br>
+    <label>
+    <input type='radio' name='communicationType' value='In-Person'> In-Person
+    </label>
+    <br>
+    <label>
+    <input type='radio' name='communicationType' value='Mail'> Mail
+    </label>
+    </div>
+    
+    <div class=question>
+    Date of Communication<span>*</span>
+    <br>
+    <input type=date name='dateOfCommunication' required>
+    </div>
+    
+    <div class=question>
+    Time of Communication<span>*</span>
+    <br>
+    <input type=time name='timeOfCommunication' required>
+    </div>
+    
+    <div class=question>
+    Duration of Communication (Minutes)<span>*</span>
+    <br>
+    <input type=number min='0' max='1440' maxlength='1000' name='durOfCommunication' title="<Minutes>" placeholder="00" required>
+    </div>
+    
+    <div class=question>
+    Documents Received<span>*</span>
+    <br>
+    <label>
+      <input type=checkbox name='documentsReceived' value="N/A" required> N/A
+    </label>
+    <br>
+    <label>
+      <input type=checkbox name='documentsReceived' value="IAC Client Intake Packet" required> IAC Client Intake Packet
+    </label>
+    <br>
+    <label>
+      <input type=checkbox name='documentsReceived' value="IAC Client Schedule Request Form" required> IAC Client Schedule Request Form
+    </label>
+    <br>
+    <label>
+      <input type=checkbox name='documentsReceived' value="ASD Diagnostic Evaluation Report" required> ASD Diagnostic Evaluation Report
+    </label>
+    <br>
+    <label>
+      <input type=checkbox name='documentsReceived' value="ASD Diagnostic Evaluation Follow-up Summary" required> ASD Diagnostic Evaluation Follow-up Summary
+    </label>
+    <br>
+    <label>
+      <input type=checkbox name='documentsReceived' value="Health Insurance Card(s)" required> Health Insurance Card(s)
+    </label>
+    <br>
+    <label>
+      <input type=checkbox name='documentsReceived' value="IEP/IFSP" required> IEP/IFSP
+    </label>
+    <br>
+    <label>
+      <input type=checkbox name='documentsReceived' value="Letter of ABA Medical Necessity" required> Letter of ABA Medical Necessity
+    </label>
+    <br>
+    <label>
+      <input type=checkbox name='documentsReceived' value="Physical Exam" required> Physical Exam
+    </label>
+    <br>
+    <label>
+      <input type=checkbox name='documentsReceived' value="Immunization Record" required> Immunization Record
+    </label>
+    <br>
+    <label>
+      <input type=checkbox name='documentsReceived' value="Misc. Educational" required> Misc Educational
+    </label>
+    <br>
+    <label>
+      <input type=checkbox name='documentsReceived' value="Misc. Medical" required> Misc. Medical
+    </label>
+    <br>
+    <label>
+      <input type=checkbox name='documentsReceived' value="Other" id=docOtherCheck onchange="disableOther(this, docOther)" required> Other <input type=text id=docOther maxlength="500" disabled>
+    </label>
+    </div>
+    
+    <div class=question>
+    Communication Notes<span>*</span>
+    <br>
+    <textarea name='communicationNotes' style='width: 100%;' maxlength="65000" required> N/a </textarea>
+    </div>
+    </form>
+    <div style="margin-top: 15px; padding: 20px;">
+    <label>
+    <button type=button id=submitForm > Submit </button>
+    </label>
+    </div>
+  <?!= include("Client Communication form_js"); ?>
+  <div id="ex1" class="modal" style="max-width:700px">
+    <div class="content">
+      <header class="modalHeader">
+        <h4><i class="fa fa-exclamation-circle fa-2x" aria-hidden="true"></i></h4>
+        <h2>Are you sure?</h2>
+      </header>
+        <div class="modalContainer">
+          <p style="text-align:center">Confirm data entry before saving</p>
+            <form id="formContent" style="margin: auto;width: 70%;padding: 10px;">
+              <label for="entityContactedModal">Entity Contacted: </label><label id="entityContactedModal"></label><br>
+              <label for="contactNameModal">Contact Person: </label><label id="contactNameModal"></label><br>
+              <label for="communicationTypeModal">Communication Type: </label><label id="communicationTypeModal"></label><br>
+              <label for="dateOfCommunicationModal">Date of Communication: </label><label id="dateOfCommunicationModal"></label><br>
+              <label for="timeOfCommunicationModal">Time of Communication: </label><label id="timeOfCommunicationModal"></label><br>
+              <label for="durOfCommunicationModal">Duration of Communication: </label><label id="durOfCommunicationModal"></label><br>
+              <label for="documentsReceivedModal">Documents Received: </label><label id="documentsReceivedModal"></label><br>
+              <label for="communicationNotesModal">Communication Notes: </label><label id="communicationNotesModal"></label><br>
+            </form>
+        </div>
+        <footer class="footer">
+          <button style="text-align:center" onclick="submitLog();$.modal.close();clearForm();">Confirm</button><button style="text-align:right" onclick="$.modal.close();">Close</button>
+        </footer>
+      </div>
+  </div>
+  
+  <div id="ex2" class="modal" style="max-width:700px">
+    <div class="content">
+      <header class="modalHeader">
+        <h4><i class="fa fa-check-circle-o fa-2x" aria-hidden="true"></i></h4>
+        <h2>Communication Log Saved Successfully</h2>
+      </header>
+      <div class="modalContainer">
+        <p style="text-align:center">Would you like to add another communication log?</p>
+          <form id="formContent" style="margin: auto;width: 70%;padding: 10px;">
+            <button style="text-align:center" onclick="clearForm();$.modal.close();" type=reset>YES!!!</button><button style="text-align:right" onclick="clearForm();toLog()" type='button'>No thanks :) [TO COMMUNICATION LOGS]</button>
+          </form>
+      </div>
+      <footer class="footer">
+        
+      </footer>
+    </div> 
+  </div>
+  </body>
+</html>

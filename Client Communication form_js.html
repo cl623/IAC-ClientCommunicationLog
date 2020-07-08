@@ -1,0 +1,324 @@
+<script>
+  var width = 1;
+  var data;
+  var user;
+  var staffId;
+  var whitelist = ['claggui@innovativeautism.org','dwalker@innovativeautism.org','jlison@innovativeautism.org','cfaymartin@innovativeautism.org','llanglois@innovativeautism.org','csanchez@innovativeautism.org','sdonarumo@innovativeautism.org','cdasilva@innovativeautism.org','elison@innovativeautism.org','jnocella@innovativeautism.org']
+ //=================================================================================================================================================================
+ //-----------------------------------Progress Bar--------------------------------------------------------------------------------------------------------------
+ //=================================================================================================================================================================
+
+var SuccessTime = 3000;
+function move() {
+  width=1;
+  $("#myBar").show();
+  var elem = document.getElementById("myBar");
+  var id = setInterval(frame, 40);
+  function frame() {
+    if (width >= 100) {
+      clearInterval(id);
+    } else {
+      width++;
+      elem.style.width = width + '%';
+    }
+  }
+}
+
+function showMessage(msg){
+    $("#client").prop( "disabled", false );
+    $("#user").html("Logged in as: <strong>" + user + "</strong>");
+	$("#SuccessMsg").show(800);
+    width=100;
+    $("#myBar").hide();
+	$("#spnMsg").text(msg);
+	  setTimeout(function(){
+		$(".myAlert-top").hide(800); 
+	  }, SuccessTime);
+}
+function showEMessage(msg){
+	$("#ErrorMsg").show(800);
+    $("#myBar").hide();
+	$("#spnEMsg").text(msg);
+	  setTimeout(function(){
+		$(".myAlert-top").hide(1500); 
+	  }, SuccessTime);
+}
+
+ //=================================================================================================================================================================
+ //-----------------------------------Client Name List--------------------------------------------------------------------------------------------------------------
+ //=================================================================================================================================================================
+ 
+/*
+ *
+ * Fill select box with client names from spreadsheet
+ * @param {String []} clientList Array from getClientName()
+ *
+ */
+ $(document).ready(function(){
+  setDate();
+  move();
+  $('.select').select2({
+    placeholder:'wweeee',
+    width:'50%'
+  });
+  google.script.run.withSuccessHandler(setUser).getUser();
+  google.script.run.withSuccessHandler(selectFill).getClientNameDbForm();   
+  google.script.run.withSuccessHandler(setStaffId).loadStaff();
+  });
+
+  function setUser(email){
+    user = email;
+  }
+  
+  function setStaffId(data){
+    var info = JSON.parse(data);
+    $.each(info,function(index,object){
+      if(object['IacEmail'] == user){
+        staffId = object['StaffId'];
+        
+      }
+    });
+  }
+  
+  function setDate(){
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth()+1; //January is 0!
+    var yyyy = today.getFullYear();
+    if(dd<10){
+        dd='0'+dd
+    } 
+    if(mm<10){
+        mm='0'+mm
+    } 
+
+    today = yyyy+'-'+mm+'-'+dd;
+    document.getElementsByName("dateOfCommunication")[0].setAttribute("max", today);
+  }
+  
+  function selectFill(bulk){
+    data = JSON.parse(bulk);
+    var clientList=[]
+    
+//    if(whitelist.includes(user))
+//      for(var i=0; i < data.length; i++){
+//        if(data[i][2] != '')
+//        clientList.push(data[i]);
+//      }
+//    else{
+//      for(var i = 0; i < data.length; i++){
+//        if(user == data[i][1])
+//          clientList.push(data[i])
+//      }
+//    }
+  
+
+//    
+//    var c = []
+//    for(var i =0; i < clientList.length; i++){
+//      c.push(clientList[i][2])
+//    }
+//    var clients = unique(c);
+//
+//    // https://stackoverflow.com/questions/740195/adding-options-to-a-select-using-jquery
+//    for ( var i = 0; i < clients.length; i++){
+//      var o = new Option(clients[i], [i]);
+//      /// jquerify the DOM object 'o' so we can use the html method
+//      //clientList[i][3] Second Index is location of FULL NAME in the spreadsheet. CHANGE ACCORDINGLY
+//      $(o).html(clients[i]);
+//      $("#clientName").append(o);
+//    }
+    $.each(data,function(index,row){
+      var fillName = row["Name"];
+      var fillClientId = row["ClientId"];
+      clientList.push(fillName);
+        
+      var o = new Option( fillName+' | '+fillClientId, fillClientId)
+      $("#clientNames").append(o);
+    });
+    if(clientList.length > 2){
+    console.log('done');
+      showMessage('Client data loaded');
+    }
+    else{
+      showEMessage('No clients to view. ');
+    }
+  }
+ 
+ 
+ //https://jsfiddle.net/Guffa/Askwb/
+  function unique(list) {
+    var result = [];
+    $.each(list, function(i, e) {
+        if ($.inArray(e, result) == -1) result.push(e);
+    });
+    return result.sort();
+  }
+ 
+
+  
+//  function submitForm(){
+//    var data = $('#form').serializeArray().reduce(function(obj, item) {
+//      obj[item.name] = item.value; 
+//    return obj;
+//    }, {});
+//    console.log(data);
+//    google.script.run.addCoomLog(data);
+//  }
+  
+      // Function start
+$.fn.getFormObject = function() {
+    var object = $(this).serializeArray().reduce(function(obj, item) {
+        var name = item.name.replace("[]", "");
+        if ( typeof obj[name] !== "undefined" ) {
+            if ( !Array.isArray(obj[name]) ) {
+                obj[name] = [ obj[name], item.value ];
+            } else {
+               obj[name].push(item.value);
+            }
+        } else {
+            obj[name] = item.value;
+        }
+        return obj;
+    }, {});
+    return object;
+}
+// Function ends
+
+// This is how it's used
+$("#submitForm").click( function() {
+  var timestamp = new Date();
+  let unfinished = false;
+  let required = []
+  let elements = document.getElementById('form').elements;
+  for(var i = 0 ; i < elements.length; i++){
+    elements[i].classList.remove('missing');
+    if(elements[i].value === '' && elements[i].id != 'otherEntity' && elements[i].id != 'docOther'){
+      unfinished = true;
+      required.push(elements[i])
+      elements[i].classList.add("missing");
+      }
+  }  
+  if(unfinished){
+    alert('Please fill out all the required fields');
+    required[0].scrollIntoView({behavior: "smooth"});
+    required.splice(0, required.length)
+  }
+  else{
+    let t = timestamp.setHours(0,0,0,0);
+    let temp = new Date(document.getElementsByName("dateOfCommunication")[0].value)
+    if(temp > t){
+     alert("NO TIME TRAVELING");
+     document.getElementsByName("dateOfCommunication")[0].classList.add('missing');
+     document.getElementsByName("dateOfCommunication")[0].scrollIntoView({behavior: "smooth"});
+    }
+    else{
+      var form_data = $("#form").getFormObject();
+      if(form_data.entityContacted == "Other")
+        form_data.entityContacted = $("#otherEntity").val();
+      if(document.getElementById("docOtherCheck").checked){
+        form_data.documentsReceived.pop()
+        form_data.documentsReceived.push($("#docOther").val());
+        }
+      console.log(form_data)
+      timestamp = new Date();
+      timestamp = timestamp.toISOString().slice(0, 19).replace('T', ' ');
+      console.log(timestamp,staffId);
+      $("#entityContactedModal").text('');
+      $("#contactNameModal").text('');
+      $("#communicationTypeModal").text('');
+      $("#dateOfCommunicationModal").text('');
+      $("#timeOfCommunicationModal").text('');
+      $("#durOfCommunicationModal").text('');
+      $("#documentsReceivedModal").text('');
+      $("#communicationNotesModal").text('');
+      
+      $("#entityContactedModal").append(form_data['entityContacted']);
+      $("#contactNameModal").append(form_data['contactName']);
+      $("#communicationTypeModal").append(form_data['communicationType']);
+      $("#dateOfCommunicationModal").append(form_data['dateOfCommunication']);
+      $("#timeOfCommunicationModal").append(form_data['timeOfCommunication']);
+      $("#durOfCommunicationModal").append(form_data['durOfCommunication']);
+      $("#documentsReceivedModal").append(form_data['documentsReceived']);
+      $("#communicationNotesModal").append(form_data['communicationNotes']);
+      
+      $('#ex1').modal();
+//      window.location.href = 'https://script.google.com/a/innovativeautism.org/macros/s/AKfycbz-L2lCTopdybraS6hbcJtNVqWx0XZfYcbEsr1zbe3oj-GAX81k/exec'
+      }
+    }
+});
+function submitLog(){
+  var timestamp = new Date();
+  let unfinished = false;
+  let required = []
+  let elements = document.getElementById('form').elements;
+  for(var i = 0 ; i < elements.length; i++){
+    elements[i].classList.remove('missing');
+    if(elements[i].value === '' && elements[i].id != 'otherEntity' && elements[i].id != 'docOther'){
+      unfinished = true;
+      required.push(elements[i])
+      elements[i].classList.add("missing");
+      }
+  }  
+  if(unfinished){
+    alert('Please fill out all the required fields');
+    required[0].scrollIntoView({behavior: "smooth"});
+    required.splice(0, required.length)
+  }
+  else{
+    let t = timestamp.setHours(0,0,0,0);
+    let temp = new Date(document.getElementsByName("dateOfCommunication")[0].value)
+    if(temp > t){
+     alert("NO TIME TRAVELING");
+     document.getElementsByName("dateOfCommunication")[0].classList.add('missing');
+     document.getElementsByName("dateOfCommunication")[0].scrollIntoView({behavior: "smooth"});
+    }
+    else{
+      $('#ex2').modal();
+      var form_data = $("#form").getFormObject();
+      if(form_data.entityContacted == "Other")
+        form_data.entityContacted = $("#otherEntity").val();
+      if(document.getElementById("docOtherCheck").checked){
+        form_data.documentsReceived.pop()
+        form_data.documentsReceived.push($("#docOther").val());
+        }
+      if(form_data.documentsReceived.length < 2)
+        form_data.documentsReceived = form_data.documentsReceived.join(', ');
+        
+      var sec = form_data.durOfCommunication * 60;
+      var hours = Math.floor(sec / 60 / 60);
+      var minutes = Math.floor((sec / 60) - (hours * 60));
+      minutes = minutes.toString().padStart(2, '0');
+      hours = hours.toString().padStart(2, '0');
+      form_data.durOfCommunication = (hours+':'+minutes+':00')
+      timestamp = new Date();
+      timestamp = timestamp.toISOString().slice(0, 19).replace('T', ' ');
+      console.log(form_data)
+      console.log(timestamp,staffId);
+      google.script.run.addCoomLog(form_data, timestamp,staffId);
+      }
+    }
+}
+
+
+function clearForm(){
+  var elements = document.getElementById('form').elements;
+  for(var i=0; i < elements.length; i++){
+    if(elements[i].type === 'checkbox' || elements[i].type === 'radio')
+      elements[i].checked = false;
+    else
+      elements[i].value = '';
+  }
+}
+
+function disableOther(check, text){
+  if(check.checked)
+    text.disabled=false;
+  else
+    text.disabled=true;
+}
+
+function toLog(){
+  window.location.href = '<?=url?>?page=Log'
+}
+</script>
