@@ -26,6 +26,7 @@ function clientSearch(){
 
 function getUser(){
   var user = Session.getActiveUser().getEmail()
+  console.info(user);
   return user;
 }
 
@@ -66,19 +67,19 @@ function getClientNameDbLog(staffId){
   var dbConnect = databaseConnect();
   var conn = connect(dbConnect);
   var stmt = conn.createStatement();  
-  var query;
+   
   var whitelisted = false;
   for(var i= 0; i < whitelist.length; i++){
    if(getUser() == whitelist[i])
      whitelisted=true
   }
   if(!whitelisted){
-    query = "select distinct l.ClientId,concat(c.FirstName,' ',c.LastName) as Name from client c inner join communications_log l on c.ClientId=l.ClientId where l.StaffId="+staffId+" order by Name asc;";
     Logger.log('not white');
+    var query = "select distinct l.ClientId,concat(c.FirstName,' ',c.LastName) as Name from client c inner join communications_log l on c.ClientId=l.ClientId where l.StaffId="+staffId+" order by Name asc;";
   }
   else{
-    query = "select concat(FirstName,' ',LastName) as Name,ClientId from client order by Name asc;";
     Logger.log('white');
+    var query = "select concat(FirstName,' ',LastName) as Name,ClientId from client order by Name asc;";
   }
   var data = stmt.executeQuery(query);
   var numCol = data.getMetaData().getColumnCount();
@@ -93,7 +94,7 @@ function getClientNameDbLog(staffId){
         
   arr.push(obj);
   obj = {};
-  }  
+  }
   if(conn.isClosed())
     Logger.log("Not Connected :(!");
   else
@@ -106,7 +107,9 @@ function getClientNameDbLog(staffId){
   else
     Logger.log("Connected!");
   var json = JSON.stringify(arr);
+  console.info('Getting Client List for Logs');
   return json;
+  
 }
 
 function getClientNameDbForm(){
@@ -141,6 +144,7 @@ function getClientNameDbForm(){
   else
     Logger.log("Connected!");
   var json = JSON.stringify(arr);
+  console.info('Getting Client List for Forms');
   return json;
 }
 
@@ -173,6 +177,7 @@ function addCoomLog(data, time,staffId){
   catch(e){
     return "Error Submitting, Please Try Again.\n\n If Error Persists Please Contact:\n jlaggui@innovativeautism.org\njlison@innovativeautism.org";
   }
+  console.info('Communications Log added');
 }
 
 function loadStaff(){
@@ -197,6 +202,7 @@ function loadStaff(){
   conn.close();
   var json = JSON.stringify(arr);
   return json;
+  console.info('Loading Staff List');
 }
 
 function loadLogs(clientId,staffId){
@@ -204,9 +210,9 @@ function loadLogs(clientId,staffId){
   var conn = connect(dbConnect);
   var stmt = conn.createStatement();
   if(clientId == 'All Clients')
-    var query = "select l.ClientId,concat(c.FirstName,' ',c.LastName),concat(s.FirstName,' ',s.LastName) as StaffName,l.EntityContacted,l.ContactPersonName,l.CommType,date_format(l.DateOfComm,'%m/%e/%Y'),TIME_FORMAT(l.TimeOfComm,'%I%:%i %p'),time_to_sec(l.DurationOfComm) as DurationOfComm,l.CommNote,l.DocumentReceived from communications_log l inner join client c on l.ClientId=c.ClientId inner join staff s on l.StaffId=s.StaffId where l.StaffId ="+staffId+" order by l.DateOfComm DESC,l.TimeOfComm DESC;";
+    var query = "select l.Timestamp,concat(s.FirstName,' ',s.LastName) as StaffName,l.EntityContacted,l.ContactPersonName,l.CommType,date_format(l.DateOfComm,'%m/%e/%Y'),TIME_FORMAT(l.TimeOfComm,'%I%:%i %p'),time_to_sec(l.DurationOfComm) as DurationOfComm,l.CommNote,l.DocumentReceived from communications_log l inner join client c on l.ClientId=c.ClientId inner join staff s on l.StaffId=s.StaffId where l.StaffId ="+staffId+" order by l.DateOfComm DESC,l.TimeOfComm DESC;";
   else
-    var query = "select concat(s.FirstName,' ',s.LastName) as StaffName,l.EntityContacted,l.ContactPersonName,l.CommType,date_format(l.DateOfComm,'%m/%e/%Y'),TIME_FORMAT(l.TimeOfComm,'%I%:%i %p'),time_to_sec(l.DurationOfComm) as DurationOfComm,l.CommNote,l.DocumentReceived from communications_log l inner join client c on l.ClientId=c.ClientId inner join staff s on l.StaffId=s.StaffId where l.ClientId ="+clientId+" order by l.DateOfComm DESC,l.TimeOfComm DESC;";
+    var query = "select l.Timestamp,concat(s.FirstName,' ',s.LastName) as StaffName,l.EntityContacted,l.ContactPersonName,l.CommType,date_format(l.DateOfComm,'%m/%e/%Y'),TIME_FORMAT(l.TimeOfComm,'%I%:%i %p'),time_to_sec(l.DurationOfComm) as DurationOfComm,l.CommNote,l.DocumentReceived from communications_log l inner join client c on l.ClientId=c.ClientId inner join staff s on l.StaffId=s.StaffId where l.ClientId ="+clientId+" order by l.DateOfComm DESC,l.TimeOfComm DESC;";
   var data = stmt.executeQuery(query);
   var numCol = data.getMetaData().getColumnCount();
   var arr = [];
@@ -224,4 +230,5 @@ function loadLogs(clientId,staffId){
   conn.close();
   var json = JSON.stringify(arr);
   return json;
+  console.info('Loading Logs based on selected option');
 }
