@@ -68,10 +68,12 @@ function showEMessage(msg){
     width:'25%'
   });
   google.script.run.withSuccessHandler(setUser).getUser();
+  google.script.run.withSuccessHandler(selectFill).getClientNameDbLog(google.script.run.withSuccessHandler(setStaffId).loadStaff());
   setInterval(refreshData, 60000);  
+  
   });
   
-  function clientInfo(){
+  function clientInfo(option){
     var clientId = $("#clientName option:selected").val();
     id = clientId;
     google.script.run.withSuccessHandler(displayLogs).loadLogs(clientId,staffId);
@@ -101,7 +103,7 @@ function showEMessage(msg){
         staffId = object['StaffId'];
       }
     });
-    google.script.run.withSuccessHandler(selectFill).getClientNameDbLog(staffId);
+    return staffId;
   }
   
   function selectFill(list){
@@ -130,7 +132,6 @@ function showEMessage(msg){
 
   function setUser(email){
     user = email;
-    google.script.run.withSuccessHandler(setStaffId).loadStaff();
   }
   
   function submitForm(){
