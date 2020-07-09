@@ -24,7 +24,6 @@ function clientSearch(){
 
 //==================================
 
-//var user = 'dwalker@innovativeautism.org'
 function getUser(){
   var user = Session.getActiveUser().getEmail()
   return user;
