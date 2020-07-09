@@ -27,9 +27,12 @@ function move() {
       elem.style.width = width + '%';
     }
   }
+  google.script.run.withSuccessHandler(setUser).getUser();
+  google.script.run.withSuccessHandler(selectFill).getClientNameDbLog(google.script.run.withSuccessHandler(setStaffId).loadStaff());
 }
 
 function showMessage(msg){
+    clearInterval(id)
     $("#clientName").prop( "disabled", false );
     $("#user").html("Logged in as: <strong>" + user + "</strong>");
 	$("#SuccessMsg").show(800);
@@ -78,8 +81,7 @@ function showEMessage(msg){
     placeholder:'wweeee',
     width:'25%'
   });
-  google.script.run.withSuccessHandler(setUser).getUser();
-  google.script.run.withSuccessHandler(selectFill).getClientNameDbLog(google.script.run.withSuccessHandler(setStaffId).loadStaff());
+
   setInterval(refreshData, 60000);  
   
   });
@@ -94,7 +96,7 @@ function showEMessage(msg){
     $('#commTable tbody tr').remove();
     var logs = JSON.parse(data);
     $.each(logs, function(index,object){
-      var tr = $('<tr title="Date Logged: '+object['Timestamp']+'"></tr>');
+      var tr = $('<tr class=row title="Date Logged: '+object['Timestamp']+'"></tr>');
       $.each(object,function(key,value){
         if(key=='Timestamp'){}
         else{
@@ -131,7 +133,7 @@ function showEMessage(msg){
         clientList.push(fillName);
         });
     
-    if(clientList.length > 2){
+    if(clientList.length > 1){
       showMessage('Client data loaded');
     }
     else{
