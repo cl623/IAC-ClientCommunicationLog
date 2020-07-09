@@ -42,9 +42,6 @@ function setTitle(name){
 
 function test(){
   Logger.log(getClientNameDbLog(131));
-//  var b = "Aarabhi Lamichhane"
-//  var a = getClientInfo(b);
-//  Logger.log(a.length);
 }
 
 /*
