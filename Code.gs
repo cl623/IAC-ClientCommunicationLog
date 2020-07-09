@@ -165,6 +165,7 @@ function addCoomLog(data, time,staffId){
 //  var data = {client: "000002", entityContacted: "Family Member", contactName: "Pop Smoke", communicationType: "Phone", dateOfCommunication: "2020-06-23", documentsReceived:"[Health Insurance Card(s),IEP/IFSP]",durOfCommunication:"01:00",entityContacted:"Family",timeOfCommunication:"14:26"};
 //  var time = "2020-01-01 05:05:05"
 //  var staffId = 1;
+  try{
   var dbConnect = databaseConnect();
   var conn = connect(dbConnect);
   var stmt = conn.createStatement();
@@ -187,6 +188,11 @@ function addCoomLog(data, time,staffId){
   }
   stmt.close();
   conn.close();
+  return "Communication Log Submitted";
+  }
+  catch(e){
+    return "Error Submitting, Please Try Again.\n\n If Error Persists Please Contact:\n jlaggui@innovativeautism.org\njlison@innovativeautism.org";
+  }
 }
 
 function loadStaff(){

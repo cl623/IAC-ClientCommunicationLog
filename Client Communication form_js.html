@@ -275,7 +275,11 @@ function submitLog(){
     }
     else{
       $('#ex2').modal();
+      
+      //Form adjustments for query
       var form_data = $("#form").getFormObject();
+      
+      //Other option are added to object as necessary
       if(form_data.entityContacted == "Other")
         form_data.entityContacted = $("#otherEntity").val();
       if(document.getElementById("docOtherCheck").checked){
@@ -284,7 +288,9 @@ function submitLog(){
         }
       if(form_data.documentsReceived.length < 2)
         form_data.documentsReceived = form_data.documentsReceived.join(', ');
-        
+      
+      
+      //Time translated
       var sec = form_data.durOfCommunication * 60;
       var hours = Math.floor(sec / 60 / 60);
       var minutes = Math.floor((sec / 60) - (hours * 60));
@@ -293,15 +299,16 @@ function submitLog(){
       form_data.durOfCommunication = (hours+':'+minutes+':00')
       timestamp = new Date();
       timestamp = timestamp.toISOString().slice(0, 19).replace('T', ' ');
+      
       console.log(form_data)
       console.log(timestamp,staffId);
-      google.script.run.addCoomLog(form_data, timestamp,staffId);
+      google.script.run.withSuccessHandler(clearForm).addCoomLog(form_data, timestamp,staffId);
       }
     }
 }
 
 
-function clearForm(){
+function clearForm(submitMessage){
   var elements = document.getElementById('form').elements;
   for(var i=0; i < elements.length; i++){
     if(elements[i].type === 'checkbox' || elements[i].type === 'radio')
@@ -309,6 +316,7 @@ function clearForm(){
     else
       elements[i].value = '';
   }
+  alert(submitMessage);
 }
 
 function disableOther(check, text){
