@@ -36,7 +36,7 @@
     <form id=form>
     <div class=question>
     <label for="client" >Client: </label>     
-        <select class="select" id="clientNames" style="width:50%;">
+        <select class="select" id="clientNames" name=client style="width:50%;">
         <option disabled selected>Choose Client</option>
         </select> 
     </div>
@@ -216,7 +216,7 @@
             </form>
         </div>
         <footer class="footer">
-          <button style="text-align:center" onclick="submitLog();$.modal.close();clearForm();">Confirm</button><button style="text-align:right" onclick="$.modal.close();">Close</button>
+          <button style="text-align:center" onclick="submitLog();$.modal.close();">Confirm</button><button style="text-align:right" onclick="$.modal.close();">Close</button>
         </footer>
       </div>
   </div>
@@ -229,7 +229,7 @@
       </header>
       <div class="modalContainer">
         <p style="text-align:center">Would you like to add another communication log?</p>
-          <form id="formContent" style="margin: auto;width: 70%;padding: 10px;">
+          <form id="formContentB" style="margin: auto;width: 70%;padding: 10px;">
             <button style="text-align:center" onclick="clearForm();$.modal.close();" type=reset>YES!!!</button><button style="text-align:right" onclick="clearForm();toLog()" type='button'>No thanks :) [TO COMMUNICATION LOGS]</button>
           </form>
       </div>

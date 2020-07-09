@@ -1,9 +1,14 @@
 <script>
+/*
+ * Insert Whitelist @line:11
+ *
+ *
+ */
   var width = 1;
   var data;
   var user;
   var staffId;
-  var whitelist = ['claggui@innovativeautism.org','dwalker@innovativeautism.org','jlison@innovativeautism.org','cfaymartin@innovativeautism.org','llanglois@innovativeautism.org','csanchez@innovativeautism.org','sdonarumo@innovativeautism.org','cdasilva@innovativeautism.org','elison@innovativeautism.org','jnocella@innovativeautism.org']
+  var whitelist = ['']
  //=================================================================================================================================================================
  //-----------------------------------Progress Bar--------------------------------------------------------------------------------------------------------------
  //=================================================================================================================================================================
@@ -100,34 +105,6 @@ function showEMessage(msg){
     data = JSON.parse(bulk);
     var clientList=[]
     
-//    if(whitelist.includes(user))
-//      for(var i=0; i < data.length; i++){
-//        if(data[i][2] != '')
-//        clientList.push(data[i]);
-//      }
-//    else{
-//      for(var i = 0; i < data.length; i++){
-//        if(user == data[i][1])
-//          clientList.push(data[i])
-//      }
-//    }
-  
-
-//    
-//    var c = []
-//    for(var i =0; i < clientList.length; i++){
-//      c.push(clientList[i][2])
-//    }
-//    var clients = unique(c);
-//
-//    // https://stackoverflow.com/questions/740195/adding-options-to-a-select-using-jquery
-//    for ( var i = 0; i < clients.length; i++){
-//      var o = new Option(clients[i], [i]);
-//      /// jquerify the DOM object 'o' so we can use the html method
-//      //clientList[i][3] Second Index is location of FULL NAME in the spreadsheet. CHANGE ACCORDINGLY
-//      $(o).html(clients[i]);
-//      $("#clientName").append(o);
-//    }
     $.each(data,function(index,row){
       var fillName = row["Name"];
       var fillClientId = row["ClientId"];
@@ -154,17 +131,6 @@ function showEMessage(msg){
     });
     return result.sort();
   }
- 
-
-  
-//  function submitForm(){
-//    var data = $('#form').serializeArray().reduce(function(obj, item) {
-//      obj[item.name] = item.value; 
-//    return obj;
-//    }, {});
-//    console.log(data);
-//    google.script.run.addCoomLog(data);
-//  }
   
       // Function start
 $.fn.getFormObject = function() {
@@ -243,7 +209,6 @@ $("#submitForm").click( function() {
       $("#communicationNotesModal").append(form_data['communicationNotes']);
       
       $('#ex1').modal();
-//      window.location.href = 'https://script.google.com/a/innovativeautism.org/macros/s/AKfycbz-L2lCTopdybraS6hbcJtNVqWx0XZfYcbEsr1zbe3oj-GAX81k/exec'
       }
     }
 });
@@ -275,7 +240,11 @@ function submitLog(){
     }
     else{
       $('#ex2').modal();
+      
+      //Form adjustments for query
       var form_data = $("#form").getFormObject();
+      
+      //Other option are added to object as necessary
       if(form_data.entityContacted == "Other")
         form_data.entityContacted = $("#otherEntity").val();
       if(document.getElementById("docOtherCheck").checked){
@@ -284,7 +253,9 @@ function submitLog(){
         }
       if(form_data.documentsReceived.length < 2)
         form_data.documentsReceived = form_data.documentsReceived.join(', ');
-        
+      
+      
+      //Time translated
       var sec = form_data.durOfCommunication * 60;
       var hours = Math.floor(sec / 60 / 60);
       var minutes = Math.floor((sec / 60) - (hours * 60));
@@ -292,23 +263,37 @@ function submitLog(){
       hours = hours.toString().padStart(2, '0');
       form_data.durOfCommunication = (hours+':'+minutes+':00')
       timestamp = new Date();
+
+      timestamp.setTime(timestamp.getTime()+timestamp.getTimezoneOffset()*60*1000);
+
+      var offset = -400; //Timezone offset for EST in minutes.
+      var estDate = new Date(timestamp.getTime() + offset*60*1000);
+      console.log(estDate); //Gives Mon Mar 21 2016 23:00:00 GMT+0530 (IST)
+      
+      
+      
       timestamp = timestamp.toISOString().slice(0, 19).replace('T', ' ');
+      
       console.log(form_data)
       console.log(timestamp,staffId);
-      google.script.run.addCoomLog(form_data, timestamp,staffId);
+      google.script.run.withSuccessHandler(clearForm).addCoomLog(form_data, timestamp,staffId);
       }
     }
 }
 
 
-function clearForm(){
+function clearForm(submitMessage){
   var elements = document.getElementById('form').elements;
   for(var i=0; i < elements.length; i++){
     if(elements[i].type === 'checkbox' || elements[i].type === 'radio')
       elements[i].checked = false;
+    else if(elements[i].type === "select"){
+      
+      }
     else
       elements[i].value = '';
   }
+  alert(submitMessage);
 }
 
 function disableOther(check, text){

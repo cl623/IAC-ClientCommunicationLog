@@ -1,4 +1,4 @@
-var whitelist = ['claggui@innovativeautism.org','jlaggui@innovativeautism.org','dwalker@innovativeautism.org','jlison@innovativeautism.org','cfaymartin@innovativeautism.org','llanglois@innovativeautism.org','csanchez@innovativeautism.org','sdonarumo@innovativeautism.org','cdasilva@innovativeautism.org','elison@innovativeautism.org','jnocella@innovativeautism.org']
+var whitelist = ['']
 
 
 function doGet(e) {
@@ -27,7 +27,6 @@ function clientSearch(){
 
 //==================================
 
-//var user = 'dwalker@innovativeautism.org'
 function getUser(){
   var user = Session.getActiveUser().getEmail()
   return user;
@@ -35,8 +34,8 @@ function getUser(){
 
 
 function getClientName() {
-  var spreadsheetID = "152JLuWsBI0eSQbTBFj4oRlQyL-ACsqOtZkQ-7_Ax_fs";
-  var data = SpreadsheetApp.openById(spreadsheetID).getSheetByName("CommImport").getDataRange().getDisplayValues();
+  var spreadsheetID = "";  //Insert Spreadsheet Id
+  var data = SpreadsheetApp.openById(spreadsheetID).getSheetByName("").getDataRange().getDisplayValues();  //Insert sheet name
   return data;
 }
 
@@ -44,25 +43,19 @@ function setTitle(name){
    title = name
 }
 
-function test(){
-  Logger.log(loadLogs('All Clients',131));
-//  var b = "Aarabhi Lamichhane"
-//  var a = getClientInfo(b);
-//  Logger.log(a.length);
-}
-
 /*
  * Contains info to connect to database
+ * Insert connection info
  */      
 function databaseConnect(){
   
   var connection = {    
-    connectionName : 'test-project-278417:us-central1:live-data',
-    user : 'root',
-    password : 'password',
-    db : 'test',
+    connectionName : '',
+    user : '',
+    password : '',
+    db : '',
 
-    url : 'jdbc:google:mysql://test-project-278417:us-central1:live-data/LiveData1'
+    url : ''
   };
   
   return connection;
@@ -162,9 +155,7 @@ function getClientNameDbForm(){
 }
 
 function addCoomLog(data, time,staffId){
-//  var data = {client: "000002", entityContacted: "Family Member", contactName: "Pop Smoke", communicationType: "Phone", dateOfCommunication: "2020-06-23", documentsReceived:"[Health Insurance Card(s),IEP/IFSP]",durOfCommunication:"01:00",entityContacted:"Family",timeOfCommunication:"14:26"};
-//  var time = "2020-01-01 05:05:05"
-//  var staffId = 1;
+  try{
   var dbConnect = databaseConnect();
   var conn = connect(dbConnect);
   var stmt = conn.createStatement();
@@ -187,6 +178,11 @@ function addCoomLog(data, time,staffId){
   }
   stmt.close();
   conn.close();
+  return "Communication Log Submitted";
+  }
+  catch(e){
+    return ""; //Insert Error Message
+  }
 }
 
 function loadStaff(){
