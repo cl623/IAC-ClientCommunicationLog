@@ -94,14 +94,16 @@ function showEMessage(msg){
     $('#commTable tbody tr').remove();
     var logs = JSON.parse(data);
     $.each(logs, function(index,object){
-      var tr = $('<tr></tr>');
+      var tr = $('<tr title="Date Logged: '+object['Timestamp']+'"></tr>');
       $.each(object,function(key,value){
+        if(key=='Timestamp'){}
+        else{
         if(key=='DurationOfComm'){
           value = Math.ceil(value/60);
         }
         $('<td id="'+key+'" >'+value+'</td>').appendTo(tr);
+        }
       });
-      
       tr.appendTo('#commTable tbody');
       
     });
