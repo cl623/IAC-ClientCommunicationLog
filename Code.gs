@@ -30,12 +30,6 @@ function getUser(){
 }
 
 
-function getClientName() {
-  var spreadsheetID = "152JLuWsBI0eSQbTBFj4oRlQyL-ACsqOtZkQ-7_Ax_fs";
-  var data = SpreadsheetApp.openById(spreadsheetID).getSheetByName("CommImport").getDataRange().getDisplayValues();
-  return data;
-}
-
 function setTitle(name){
    title = name
 }
