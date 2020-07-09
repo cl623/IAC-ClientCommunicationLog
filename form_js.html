@@ -18,9 +18,9 @@ function move() {
   width=1;
   $("#myBar").show();
   var elem = document.getElementById("myBar");
-  var id = setInterval(frame, 80);
+  var id = setInterval(frame, 160);
   function frame() {
-    if (width >= 100) {
+    if (width >= 30) {
       clearInterval(id);
     } else {
       width++;
@@ -33,13 +33,24 @@ function showMessage(msg){
     $("#clientName").prop( "disabled", false );
     $("#user").html("Logged in as: <strong>" + user + "</strong>");
 	$("#SuccessMsg").show(800);
-    width=100;
-    $("#myBar").hide();
+    var elem = document.getElementById("myBar");
+    var id = setInterval(frame, 30);
+    function frame() {
+      if (width >= 100) {
+        clearInterval(id);
+        $("#myBar").hide();
+      } else {
+        width++;
+       elem.style.width = width + '%';
+      }
+    }
+
 	$("#spnMsg").text(msg);
 	  setTimeout(function(){
 		$(".myAlert-top").hide(800); 
 	  }, SuccessTime);
 }
+
 function showEMessage(msg){
 	$("#ErrorMsg").show(800);
     $("#user").html("Logged in as: <strong>" + user + "</strong>");
