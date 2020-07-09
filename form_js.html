@@ -18,9 +18,9 @@ function move() {
   width=1;
   $("#myBar").show();
   var elem = document.getElementById("myBar");
-  var id = setInterval(frame, 160);
+  var id = setInterval(frame, 90);
   function frame() {
-    if (width >= 30) {
+    if (width >= 90) {
       clearInterval(id);
     } else {
       width++;
@@ -34,11 +34,11 @@ function showMessage(msg){
     $("#user").html("Logged in as: <strong>" + user + "</strong>");
 	$("#SuccessMsg").show(800);
     var elem = document.getElementById("myBar");
-    var id = setInterval(frame, 30);
+    var id = setInterval(frame, 25);
     function frame() {
       if (width >= 100) {
         clearInterval(id);
-        $("#myBar").hide();
+        $("#myBar").hide(150);
       } else {
         width++;
        elem.style.width = width + '%';
