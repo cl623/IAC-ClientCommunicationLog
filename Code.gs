@@ -66,21 +66,24 @@ function getClientNameDbLog(staffId){
   var dbConnect = databaseConnect();
   var conn = connect(dbConnect);
   var stmt = conn.createStatement();  
-   
+  var query;
   var whitelisted = false;
   for(var i= 0; i < whitelist.length; i++){
    if(getUser() == whitelist[i])
      whitelisted=true
   }
-  if(!whitelisted)
-    var query = "select distinct l.ClientId,concat(c.FirstName,' ',c.LastName) as Name from client c inner join communications_log l on c.ClientId=l.ClientId where l.StaffId="+staffId+" order by Name asc;";
-  else
-    var query = "select concat(FirstName,' ',LastName) as Name,ClientId from client order by Name asc;";
+  if(!whitelisted){
+    query = "select distinct l.ClientId,concat(c.FirstName,' ',c.LastName) as Name from client c inner join communications_log l on c.ClientId=l.ClientId where l.StaffId="+staffId+" order by Name asc;";
+    Logger.log('not white');
+  }
+  else{
+    query = "select concat(FirstName,' ',LastName) as Name,ClientId from client order by Name asc;";
+    Logger.log('white');
+  }
   var data = stmt.executeQuery(query);
   var numCol = data.getMetaData().getColumnCount();
   var arr = [];
   var obj = {};
-  var time = new Date().getTime();
   while(data.next()){
     
    for( var x = 1; x < numCol+1; x++){
@@ -90,9 +93,7 @@ function getClientNameDbLog(staffId){
         
   arr.push(obj);
   obj = {};
-  }
-  var newTime = new Date().getTime() - time;   
-  Logger.log(newTime); 
+  }  
   if(conn.isClosed())
     Logger.log("Not Connected :(!");
   else
@@ -203,9 +204,9 @@ function loadLogs(clientId,staffId){
   var conn = connect(dbConnect);
   var stmt = conn.createStatement();
   if(clientId == 'All Clients')
-    var query = "select l.Timestamp,concat(s.FirstName,' ',s.LastName) as StaffName,l.EntityContacted,l.ContactPersonName,l.CommType,date_format(l.DateOfComm,'%m/%e/%Y'),TIME_FORMAT(l.TimeOfComm,'%I%:%i %p'),time_to_sec(l.DurationOfComm) as DurationOfComm,l.CommNote,l.DocumentReceived from communications_log l inner join client c on l.ClientId=c.ClientId inner join staff s on l.StaffId=s.StaffId where l.StaffId ="+staffId+" order by l.DateOfComm DESC,l.TimeOfComm DESC;";
+    var query = "select l.ClientId,concat(c.FirstName,' ',c.LastName),concat(s.FirstName,' ',s.LastName) as StaffName,l.EntityContacted,l.ContactPersonName,l.CommType,date_format(l.DateOfComm,'%m/%e/%Y'),TIME_FORMAT(l.TimeOfComm,'%I%:%i %p'),time_to_sec(l.DurationOfComm) as DurationOfComm,l.CommNote,l.DocumentReceived from communications_log l inner join client c on l.ClientId=c.ClientId inner join staff s on l.StaffId=s.StaffId where l.StaffId ="+staffId+" order by l.DateOfComm DESC,l.TimeOfComm DESC;";
   else
-    var query = "select l.Timestamp,concat(s.FirstName,' ',s.LastName) as StaffName,l.EntityContacted,l.ContactPersonName,l.CommType,date_format(l.DateOfComm,'%m/%e/%Y'),TIME_FORMAT(l.TimeOfComm,'%I%:%i %p'),time_to_sec(l.DurationOfComm) as DurationOfComm,l.CommNote,l.DocumentReceived from communications_log l inner join client c on l.ClientId=c.ClientId inner join staff s on l.StaffId=s.StaffId where l.ClientId ="+clientId+" order by l.DateOfComm DESC,l.TimeOfComm DESC;";
+    var query = "select concat(s.FirstName,' ',s.LastName) as StaffName,l.EntityContacted,l.ContactPersonName,l.CommType,date_format(l.DateOfComm,'%m/%e/%Y'),TIME_FORMAT(l.TimeOfComm,'%I%:%i %p'),time_to_sec(l.DurationOfComm) as DurationOfComm,l.CommNote,l.DocumentReceived from communications_log l inner join client c on l.ClientId=c.ClientId inner join staff s on l.StaffId=s.StaffId where l.ClientId ="+clientId+" order by l.DateOfComm DESC,l.TimeOfComm DESC;";
   var data = stmt.executeQuery(query);
   var numCol = data.getMetaData().getColumnCount();
   var arr = [];

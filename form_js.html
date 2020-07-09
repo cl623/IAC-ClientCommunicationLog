@@ -28,7 +28,7 @@ function move() {
     }
   }
   google.script.run.withSuccessHandler(setUser).getUser();
-  google.script.run.withSuccessHandler(selectFill).getClientNameDbLog(google.script.run.withSuccessHandler(setStaffId).loadStaff());
+  google.script.run.withSuccessHandler(setStaffId).loadStaff();
 }
 
 function showMessage(msg){
@@ -118,13 +118,13 @@ function showEMessage(msg){
         staffId = object['StaffId'];
       }
     });
+    google.script.run.withSuccessHandler(selectFill).getClientNameDbLog(staffId);
     return staffId;
   }
   
   function selectFill(list){
     var names = JSON.parse(list);
     var clientList = [];
-    
     $.each(names,function(index,row){
         var fillName = row['Name'];
         var fillClientId = row["ClientId"];
@@ -133,7 +133,7 @@ function showEMessage(msg){
         clientList.push(fillName);
         });
     
-    if(clientList.length > 1){
+    if(clientList.length > 0){
       showMessage('Client data loaded');
     }
     else{
