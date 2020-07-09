@@ -221,8 +221,6 @@ $("#submitForm").click( function() {
         form_data.documentsReceived.push($("#docOther").val());
         }
       console.log(form_data)
-      timestamp = new Date();
-      timestamp = timestamp.toISOString().slice(0, 19).replace('T', ' ');
       console.log(timestamp,staffId);
       $("#entityContactedModal").text('');
       $("#contactNameModal").text('');
@@ -291,11 +289,11 @@ function submitLog(){
       minutes = minutes.toString().padStart(2, '0');
       hours = hours.toString().padStart(2, '0');
       form_data.durOfCommunication = (hours+':'+minutes+':00')
-      timestamp = new Date();
-      timestamp = timestamp.toISOString().slice(0, 19).replace('T', ' ');
+      var timezone = new Date().getTimezoneOffset() * 60000;
+      timestamp = (new Date(Date.now() - timezone)).toISOString().slice(0, 19).replace('T', ' ');
       console.log(form_data)
       console.log(timestamp,staffId);
-      google.script.run.addCoomLog(form_data, timestamp,staffId);
+      google.script.run.addCoomLog(form_data,timestamp,staffId);
       }
     }
 }
