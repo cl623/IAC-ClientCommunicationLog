@@ -1,5 +1,4 @@
-var whitelist = ['']
-
+var whitelist = IACProperties.getWhitelist('Communication Log');
 
 function doGet(e) {
   if (e.parameter && e.parameter['page'] == 'Form') {
@@ -34,8 +33,8 @@ function getUser(){
 
 
 function getClientName() {
-  var spreadsheetID = "";  //Insert Spreadsheet Id
-  var data = SpreadsheetApp.openById(spreadsheetID).getSheetByName("").getDataRange().getDisplayValues();  //Insert sheet name
+  var spreadsheetID = IACProperties.getSpreadsheetID('Communication Log');
+  var data = SpreadsheetApp.openById(spreadsheetID).getSheetByName("CommImport").getDataRange().getDisplayValues();
   return data;
 }
 
@@ -43,20 +42,17 @@ function setTitle(name){
    title = name
 }
 
+function test(){
+  Logger.log(databaseConnect().user)
+//  Logger.log(loadLogs('All Clients',131));
+}
+
 /*
  * Contains info to connect to database
- * Insert connection info
  */      
 function databaseConnect(){
   
-  var connection = {    
-    connectionName : '',
-    user : '',
-    password : '',
-    db : '',
-
-    url : ''
-  };
+  var connection = IACProperties.getDatabaseCredentials()
   
   return connection;
 }
@@ -155,6 +151,9 @@ function getClientNameDbForm(){
 }
 
 function addCoomLog(data, time,staffId){
+//  var data = {client: "000002", entityContacted: "Family Member", contactName: "Pop Smoke", communicationType: "Phone", dateOfCommunication: "2020-06-23", documentsReceived:"[Health Insurance Card(s),IEP/IFSP]",durOfCommunication:"01:00",entityContacted:"Family",timeOfCommunication:"14:26"};
+//  var time = "2020-01-01 05:05:05"
+//  var staffId = 1;
   try{
   var dbConnect = databaseConnect();
   var conn = connect(dbConnect);
@@ -181,7 +180,7 @@ function addCoomLog(data, time,staffId){
   return "Communication Log Submitted";
   }
   catch(e){
-    return ""; //Insert Error Message
+    return "Error Submitting, Please Try Again.\n\n If Error Persists Please Contact:\n jlaggui@innovativeautism.org\njlison@innovativeautism.org";
   }
 }
 
