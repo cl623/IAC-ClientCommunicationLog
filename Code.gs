@@ -1,6 +1,3 @@
-var whitelist = ['claggui@innovativeautism.org','jlaggui@innovativeautism.org','dwalker@innovativeautism.org','jlison@innovativeautism.org','cfaymartin@innovativeautism.org','llanglois@innovativeautism.org','csanchez@innovativeautism.org','sdonarumo@innovativeautism.org','cdasilva@innovativeautism.org','elison@innovativeautism.org','jnocella@innovativeautism.org']
-
-
 function doGet(e) {
   if (e.parameter && e.parameter['page'] == 'Form') {
    return HtmlService.createTemplateFromFile("Client Communication Form").evaluate().setTitle("Client Communication Form").setFaviconUrl('https://le-cdn.website-editor.net/890182a9e4384ae6930cd502f9f32152/dms3rep/multi/opt/IAC+FINAL+%7C+Large-480w.png');
@@ -45,7 +42,7 @@ function setTitle(name){
 }
 
 function test(){
-  Logger.log(loadLogs('All Clients',131));
+  Logger.log(getClientNameDbLog(131));
 //  var b = "Aarabhi Lamichhane"
 //  var a = getClientInfo(b);
 //  Logger.log(a.length);
@@ -56,14 +53,8 @@ function test(){
  */      
 function databaseConnect(){
   
-  var connection = {    
-    connectionName : 'test-project-278417:us-central1:live-data',
-    user : 'root',
-    password : 'password',
-    db : 'test',
-
-    url : 'jdbc:google:mysql://test-project-278417:us-central1:live-data/LiveData1'
-  };
+  var Properties;
+  var connection = PropertiesService.getScriptProperties().getProperties();
   
   return connection;
 }
@@ -80,7 +71,8 @@ function connect(connection){
     
 }
 function getClientNameDbLog(staffId){
-  
+  var Properties = PropertiesService.getScriptProperties().getProperties();
+  var whitelist = Properties.whitelist.split(',');
   var dbConnect = databaseConnect();
   var conn = connect(dbConnect);
   var stmt = conn.createStatement();  
@@ -162,9 +154,6 @@ function getClientNameDbForm(){
 }
 
 function addCoomLog(data, time,staffId){
-//  var data = {client: "000002", entityContacted: "Family Member", contactName: "Pop Smoke", communicationType: "Phone", dateOfCommunication: "2020-06-23", documentsReceived:"[Health Insurance Card(s),IEP/IFSP]",durOfCommunication:"01:00",entityContacted:"Family",timeOfCommunication:"14:26"};
-//  var time = "2020-01-01 05:05:05"
-//  var staffId = 1;
   try{
   var dbConnect = databaseConnect();
   var conn = connect(dbConnect);
