@@ -18,28 +18,42 @@ function move() {
   width=1;
   $("#myBar").show();
   var elem = document.getElementById("myBar");
-  var id = setInterval(frame, 80);
+  var id = setInterval(frame, 90);
   function frame() {
-    if (width >= 100) {
+    if (width >= 90) {
       clearInterval(id);
     } else {
       width++;
       elem.style.width = width + '%';
     }
   }
+  google.script.run.withSuccessHandler(setUser).getUser();
+  google.script.run.withSuccessHandler(setStaffId).loadStaff();
 }
 
 function showMessage(msg){
+    clearInterval(id)
     $("#clientName").prop( "disabled", false );
     $("#user").html("Logged in as: <strong>" + user + "</strong>");
 	$("#SuccessMsg").show(800);
-    width=100;
-    $("#myBar").hide();
+    var elem = document.getElementById("myBar");
+    var id = setInterval(frame, 25);
+    function frame() {
+      if (width >= 100) {
+        clearInterval(id);
+        $("#myBar").hide(150);
+      } else {
+        width++;
+       elem.style.width = width + '%';
+      }
+    }
+
 	$("#spnMsg").text(msg);
 	  setTimeout(function(){
 		$(".myAlert-top").hide(800); 
 	  }, SuccessTime);
 }
+
 function showEMessage(msg){
 	$("#ErrorMsg").show(800);
     $("#user").html("Logged in as: <strong>" + user + "</strong>");
@@ -62,14 +76,12 @@ function showEMessage(msg){
  */
  
  $(document).ready(function(){
-  $('.longHeader').css('display','none');
   move();
   $('.select').select2({
     placeholder:'wweeee',
     width:'25%'
   });
-  google.script.run.withSuccessHandler(setUser).getUser();
-  google.script.run.withSuccessHandler(selectFill).getClientNameDbLog(google.script.run.withSuccessHandler(setStaffId).loadStaff());
+
   setInterval(refreshData, 60000);  
   
   });
@@ -84,14 +96,16 @@ function showEMessage(msg){
     $('#commTable tbody tr').remove();
     var logs = JSON.parse(data);
     $.each(logs, function(index,object){
-      var tr = $('<tr></tr>');
+      var tr = $('<tr class=row title="Date Logged: '+object['Timestamp']+'"></tr>');
       $.each(object,function(key,value){
+        if(key=='Timestamp'){}
+        else{
         if(key=='DurationOfComm'){
           value = Math.ceil(value/60);
         }
         $('<td id="'+key+'" >'+value+'</td>').appendTo(tr);
+        }
       });
-      
       tr.appendTo('#commTable tbody');
       
     });
@@ -104,13 +118,13 @@ function showEMessage(msg){
         staffId = object['StaffId'];
       }
     });
+    google.script.run.withSuccessHandler(selectFill).getClientNameDbLog(staffId);
     return staffId;
   }
   
   function selectFill(list){
     var names = JSON.parse(list);
     var clientList = [];
-    
     $.each(names,function(index,row){
         var fillName = row['Name'];
         var fillClientId = row["ClientId"];
@@ -119,7 +133,7 @@ function showEMessage(msg){
         clientList.push(fillName);
         });
     
-    if(clientList.length > 2){
+    if(clientList.length > 0){
       showMessage('Client data loaded');
     }
     else{

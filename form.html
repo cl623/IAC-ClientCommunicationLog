@@ -32,12 +32,12 @@
     <div class="header" id=myHeader> <!-- Heading Section for Client Lookup and User Buttons -->
       <div>
         <label for="clientName" style="color:White;">Client List: </label>     
-        <select class="select" id="clientName" style="width:20%;" onchange='clientInfo(this)'>
+        <select class="select" id="clientName" style="width:20%;" onchange='clientInfo(this)' disabled>
         <option disabled selected>Choose Client</option>
-        <option>All Clients</option>
         </select> 
        <!-- <strong id=cid> ID</strong> -->
          <button class="btn btn-primary" onclick="window.open(href='<?=url?>?page=Form','_blank')" style="float:right;">Client Communication Form</button>
+        <i class="fa fa-print" aria-hidden="true" style="font-size:2em;float:right;cursor:pointer;" onclick="window.print()"> &emsp;</i>
       </div>
     </div>                <!-- End Heading Section-->
     
@@ -72,8 +72,6 @@
       </tr>
 -->
       <tr class=shortHeader>
-        <th id = 'clientIdHead' title='Client Id' hidden=true>Client Id</th>
-        <th id = 'clientHead' title='Client Name' hidden>Client</th>
         <th title='Staff Username'>Staff</th>
         <th title='Entity Contacted'>Entity Contacted</th>
         <th title="Contact Person's Name">Contact Person's Name</th>

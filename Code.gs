@@ -66,21 +66,24 @@ function getClientNameDbLog(staffId){
   var dbConnect = databaseConnect();
   var conn = connect(dbConnect);
   var stmt = conn.createStatement();  
-   
+  var query;
   var whitelisted = false;
   for(var i= 0; i < whitelist.length; i++){
    if(getUser() == whitelist[i])
      whitelisted=true
   }
-  if(!whitelisted)
-    var query = "select distinct l.ClientId,concat(c.FirstName,' ',c.LastName) as Name from client c inner join communications_log l on c.ClientId=l.ClientId where l.StaffId="+staffId+" order by Name asc;";
-  else
-    var query = "select concat(FirstName,' ',LastName) as Name,ClientId from client order by Name asc;";
+  if(!whitelisted){
+    query = "select distinct l.ClientId,concat(c.FirstName,' ',c.LastName) as Name from client c inner join communications_log l on c.ClientId=l.ClientId where l.StaffId="+staffId+" order by Name asc;";
+    Logger.log('not white');
+  }
+  else{
+    query = "select concat(FirstName,' ',LastName) as Name,ClientId from client order by Name asc;";
+    Logger.log('white');
+  }
   var data = stmt.executeQuery(query);
   var numCol = data.getMetaData().getColumnCount();
   var arr = [];
   var obj = {};
-  var time = new Date().getTime();
   while(data.next()){
     
    for( var x = 1; x < numCol+1; x++){
@@ -90,9 +93,7 @@ function getClientNameDbLog(staffId){
         
   arr.push(obj);
   obj = {};
-  }
-  var newTime = new Date().getTime() - time;   
-  Logger.log(newTime); 
+  }  
   if(conn.isClosed())
     Logger.log("Not Connected :(!");
   else
