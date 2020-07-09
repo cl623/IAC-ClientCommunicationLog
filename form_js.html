@@ -77,14 +77,6 @@ function showEMessage(msg){
   function clientInfo(option){
     var clientId = $("#clientName option:selected").val();
     id = clientId;
-    if(option='All Clients'){
-      $('#clientIdHead').show();
-      $('#clientHead').show();
-    }
-    else{
-      $('#clientIdHead').hide();
-      $('#clientHead').hide();
-    }
     google.script.run.withSuccessHandler(displayLogs).loadLogs(clientId,staffId);
   }
   

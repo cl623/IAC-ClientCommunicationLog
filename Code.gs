@@ -203,7 +203,7 @@ function loadLogs(clientId,staffId){
   var conn = connect(dbConnect);
   var stmt = conn.createStatement();
   if(clientId == 'All Clients')
-    var query = "select concat(s.FirstName,' ',s.LastName) as StaffName,l.EntityContacted,l.ContactPersonName,l.CommType,date_format(l.DateOfComm,'%m/%e/%Y'),TIME_FORMAT(l.TimeOfComm,'%I%:%i %p'),time_to_sec(l.DurationOfComm) as DurationOfComm,l.CommNote,l.DocumentReceived from communications_log l inner join client c on l.ClientId=c.ClientId inner join staff s on l.StaffId=s.StaffId where l.StaffId ="+staffId+" order by l.DateOfComm DESC,l.TimeOfComm DESC;";
+    var query = "select l.ClientId,concat(c.FirstName,' ',c.LastName),concat(s.FirstName,' ',s.LastName) as StaffName,l.EntityContacted,l.ContactPersonName,l.CommType,date_format(l.DateOfComm,'%m/%e/%Y'),TIME_FORMAT(l.TimeOfComm,'%I%:%i %p'),time_to_sec(l.DurationOfComm) as DurationOfComm,l.CommNote,l.DocumentReceived from communications_log l inner join client c on l.ClientId=c.ClientId inner join staff s on l.StaffId=s.StaffId where l.StaffId ="+staffId+" order by l.DateOfComm DESC,l.TimeOfComm DESC;";
   else
     var query = "select concat(s.FirstName,' ',s.LastName) as StaffName,l.EntityContacted,l.ContactPersonName,l.CommType,date_format(l.DateOfComm,'%m/%e/%Y'),TIME_FORMAT(l.TimeOfComm,'%I%:%i %p'),time_to_sec(l.DurationOfComm) as DurationOfComm,l.CommNote,l.DocumentReceived from communications_log l inner join client c on l.ClientId=c.ClientId inner join staff s on l.StaffId=s.StaffId where l.ClientId ="+clientId+" order by l.DateOfComm DESC,l.TimeOfComm DESC;";
   var data = stmt.executeQuery(query);
