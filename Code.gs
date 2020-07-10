@@ -153,7 +153,6 @@ function addCoomLog(data, time,staffId){
   var dbConnect = databaseConnect();
   var conn = connect(dbConnect);
   var stmt = conn.createStatement();
-  var commId;
   var query = "insert into communications_log(ClientId,CommNote,CommType,DateOfComm,Timestamp,TimeOfComm,DurationOfComm,EntityContacted,ContactPersonName,DocumentReceived,StaffId) values('"+data['client']+"','"+data['communicationNotes']+"','"+data['communicationType']+"','"+data['dateOfCommunication']+"','"+time+"','"+data['timeOfCommunication']+"','"+data['durOfCommunication']+"','"+data['entityContacted']+"','"+data['contactName']+"','"+data['documentsReceived']+"',"+staffId+");";
   var exe = stmt.execute(query);
   if(conn.isClosed())
@@ -164,11 +163,14 @@ function addCoomLog(data, time,staffId){
   stmt.close();
   conn.close();
     if(conn.isClosed()){}
-  else
+  else{
     Logger.log(activeUser+' failed to disconnect to database.(Add Log)');
+  }
+  console.info('Log submitted to database for '+activeUser);
   return "Communication Log Submitted";
   }
   catch(e){
+    console.error('Error submitting log for '+activeUser);
     return "Error Submitting, Please Try Again.\n\n If Error Persists Please Contact:\n jlaggui@innovativeautism.org\njlison@innovativeautism.org";
   }
   console.info('Communications Log added');

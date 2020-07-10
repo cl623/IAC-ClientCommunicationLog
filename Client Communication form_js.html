@@ -309,6 +309,10 @@ function submitLog(){
       timestamp = (new Date(Date.now() - 14400000)).toISOString().slice(0, 19).replace('T', ' ');
       console.log(form_data)
       console.log(timestamp,staffId);
+      form_data['communicationNotes'] = form_data['communicationNotes'].replace(/'/g, "\\\'");
+      form_data['entityConacted'] = form_data['entityContacted'].replace(/'/g, "\\\'");
+      form_data['contactPerson'] = form_data['contactPerson].replace(/'/g, "\\\'");
+      form_data['documentsReceived'] = form_data['documentReceived'].replace(/'/g, "\\\'");
       google.script.run.withSuccessHandler(clearForm).addCoomLog(form_data,timestamp,staffId);
 
       }
