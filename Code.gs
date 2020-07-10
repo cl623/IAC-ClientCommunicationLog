@@ -26,7 +26,7 @@ function clientSearch(){
 
 function getUser(){
   var user = Session.getActiveUser().getEmail()
-  console.info(user);
+  console.info(user+ " attemping...");
   return user;
 }
 
@@ -70,7 +70,7 @@ function getClientNameDbLog(staffId){
    
   var whitelisted = false;
   for(var i= 0; i < whitelist.length; i++){
-   if(getUser() == whitelist[i])
+   if(Session.getActiveUser().getEmail() == whitelist[i])
      whitelisted=true
   }
   if(!whitelisted){
@@ -156,20 +156,6 @@ function addCoomLog(data, time,staffId){
   var commId;
   var query = "insert into communications_log(ClientId,CommNote,CommType,DateOfComm,Timestamp,TimeOfComm,DurationOfComm,EntityContacted,ContactPersonName,DocumentReceived,StaffId) values('"+data['client']+"','"+data['communicationNotes']+"','"+data['communicationType']+"','"+data['dateOfCommunication']+"','"+time+"','"+data['timeOfCommunication']+"','"+data['durOfCommunication']+"','"+data['entityContacted']+"','"+data['contactName']+"','"+data['documentsReceived']+"',"+staffId+");";
   var exe = stmt.execute(query);
-  var query = "select LAST_INSERT_ID();";
-  var exe = stmt.executeQuery(query);
-  var numCol = exe.getMetaData().getColumnCount();
-  while(exe.next()){
-    
-    for( var x = 1; x < numCol+1; x++){
-      var colName = exe.getMetaData().getColumnName(x);
-      commId = exe.getString(x);      
-    }
-  }
-  for(var i=0; i<data['documentsReceived'].length;i++){
-    var query = "insert into document_received(CommunicationsLogId,DocumentName,ClientId) values("+commId+",'"+data['documentsReceived'][i]+"',"+data['client']+");";
-    var exe = stmt.execute(query);
-  }
   stmt.close();
   conn.close();
   return "Communication Log Submitted";

@@ -9,12 +9,15 @@
 
 var SuccessTime = 3000;
 function move() {
+  google.script.run.withSuccessHandler(setUser).getUser();
+  google.script.run.withSuccessHandler(selectFill).getClientNameDbForm();   
+  google.script.run.withSuccessHandler(setStaffId).loadStaff();
   width=1;
   $("#myBar").show();
   var elem = document.getElementById("myBar");
-  var id = setInterval(frame, 40);
+  var id = setInterval(frame, 70);
   function frame() {
-    if (width >= 100) {
+    if (width >= 90) {
       clearInterval(id);
     } else {
       width++;
@@ -24,16 +27,27 @@ function move() {
 }
 
 function showMessage(msg){
+    clearInterval(id)
     $("#clientNames").prop( "disabled", false );
     $("#user").html("Logged in as: <strong>" + user + "</strong>");
 	$("#SuccessMsg").show(800);
-    width=100;
-    $("#myBar").hide();
+    var elem = document.getElementById("myBar");
+    var id = setInterval(frame, 25);
+    function frame() {
+      if (width >= 100) {
+        clearInterval(id);
+        $("#myBar").hide(150);
+      } else {
+        width++;
+       elem.style.width = width + '%';
+      }
+    }
 	$("#spnMsg").text(msg);
 	  setTimeout(function(){
 		$(".myAlert-top").hide(800); 
 	  }, SuccessTime);
 }
+
 function showEMessage(msg){
 	$("#ErrorMsg").show(800);
     $("#myBar").hide();
@@ -60,9 +74,6 @@ function showEMessage(msg){
     placeholder:'wweeee',
     width:'50%'
   });
-  google.script.run.withSuccessHandler(setUser).getUser();
-  google.script.run.withSuccessHandler(selectFill).getClientNameDbForm();   
-  google.script.run.withSuccessHandler(setStaffId).loadStaff();
   });
 
   function setUser(email){
