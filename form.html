@@ -33,11 +33,11 @@
       <div>
         <label for="clientName" style="color:White;">Client List: </label>     
         <select class="select" id="clientName" style="width:20%;" onchange='clientInfo(this)' disabled>
-        <option disabled selected>Choose Client</option>
+        <option value=0 disabled selected>Choose Client</option>
         </select> 
        <!-- <strong id=cid> ID</strong> -->
-         <button class="btn btn-primary" onclick="window.open(href='<?=url?>?page=Form','_blank')" style="float:right;">Client Communication Form</button>
-        <i class="fa fa-print" aria-hidden="true" style="font-size:2em;float:right;cursor:pointer;" onclick="window.print()"> &emsp;</i>
+         <button class="btn btn-primary" onclick="window.open(href='<?=url?>?page=Form','_blank')" style="float:right;" title='To Form Submission Page'>Client Communication Form</button>
+        <i class="fa fa-print" aria-hidden="true" style="font-size:2em;float:right;cursor:pointer;" onclick="window.print()" title="Print Page"> &emsp;</i>
       </div>
     </div>                <!-- End Heading Section-->
     

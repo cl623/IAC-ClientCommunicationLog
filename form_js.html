@@ -142,7 +142,8 @@ function showEMessage(msg){
   }
   
   function refreshData(){
-    clientInfo();
+    if($('[name=clientName]').val() != 0)
+      clientInfo(id);
   }
 
   function setUser(email){
