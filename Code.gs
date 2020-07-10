@@ -171,7 +171,7 @@ function addCoomLog(data, time,staffId){
   }
   catch(e){
     console.error('Error submitting log for '+activeUser);
-    return "Error Submitting, Please Try Again.\n\n If Error Persists Please Contact:\n jlaggui@innovativeautism.org\njlison@innovativeautism.org";
+    return "Error Submitting, Please Try Again.\n\n If Error Persists Please Contact:\n it@innovativeautism.org";
   }
   console.info('Communications Log added');
 }
