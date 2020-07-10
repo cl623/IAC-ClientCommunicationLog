@@ -306,7 +306,7 @@ function submitLog(){
       hours = hours.toString().padStart(2, '0');
       form_data.durOfCommunication = (hours+':'+minutes+':00')
       var timezone = new Date().getTimezoneOffset() * 60000;
-      timestamp = (new Date(Date.now() - timezone)).toISOString().slice(0, 19).replace('T', ' ');
+      timestamp = (new Date(Date.now() - 14400000)).toISOString().slice(0, 19).replace('T', ' ');
       console.log(form_data)
       console.log(timestamp,staffId);
       google.script.run.withSuccessHandler(clearForm).addCoomLog(form_data,timestamp,staffId);
