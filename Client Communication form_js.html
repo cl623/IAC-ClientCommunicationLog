@@ -65,7 +65,7 @@ function showEMessage(msg){
 /*
  *
  * Fill select box with client names from spreadsheet
- * @param {String []} clientList Array from getClientName()
+ * @param {String []} clientList Array from getClientName
  *
  */
  $(document).ready(function(){
@@ -228,6 +228,7 @@ $("#submitForm").click( function() {
       if(form_data.entityContacted == "Other")
         form_data.entityContacted = $("#otherEntity").val();
       if(document.getElementById("docOtherCheck").checked){
+        alert(form_data.documentsReceived)
         form_data.documentsReceived.pop()
         form_data.documentsReceived.push($("#docOther").val());
         }
