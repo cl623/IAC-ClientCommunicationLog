@@ -1,3 +1,4 @@
+var activeUser = getUser();
 function doGet(e) {
   if (e.parameter && e.parameter['page'] == 'Form') {
    return HtmlService.createTemplateFromFile("Client Communication Form").evaluate().setTitle("Client Communication Form").setFaviconUrl('https://le-cdn.website-editor.net/890182a9e4384ae6930cd502f9f32152/dms3rep/multi/opt/IAC+FINAL+%7C+Large-480w.png');
@@ -26,6 +27,7 @@ function clientSearch(){
 
 function getUser(){
   var user = Session.getActiveUser().getEmail()
+  activeUser = user;
   console.info(user+ " attemping...");
   return user;
 }
@@ -74,11 +76,11 @@ function getClientNameDbLog(staffId){
      whitelisted=true
   }
   if(!whitelisted){
-    Logger.log('not white');
+    Logger.log(activeUser+' is not whitelisted');
     var query = "select distinct l.ClientId,concat(c.FirstName,' ',c.LastName) as Name from client c inner join communications_log l on c.ClientId=l.ClientId where l.StaffId="+staffId+" order by Name asc;";
   }
   else{
-    Logger.log('white');
+    Logger.log(activeUser+' is whitelisted');
     var query = "select concat(FirstName,' ',LastName) as Name,ClientId from client order by Name asc;";
   }
   var data = stmt.executeQuery(query);
@@ -96,16 +98,16 @@ function getClientNameDbLog(staffId){
   obj = {};
   }
   if(conn.isClosed())
-    Logger.log("Not Connected :(!");
+    Logger.log(activeUser+' failed to load client list for logs');
   else
-    Logger.log("Connected!");
+    Logger.log(activeUser+' loaded client list for logs');
     
   stmt.close();
   conn.close();
   if(conn.isClosed())
-    Logger.log("Disconnected :(!");
+    Logger.log(activeUser+' disconnected from database.(Logs)');
   else
-    Logger.log("Connected!");
+    Logger.log(activeUser+' failed to disconnect to database.(Logs)');
   var json = JSON.stringify(arr);
   console.info('Getting Client List for Logs');
   return json;
@@ -133,16 +135,16 @@ function getClientNameDbForm(){
   obj = {};
   }
   if(conn.isClosed())
-    Logger.log("Not Connected :(!");
+    Logger.log(activeUser+' failed to load client list for form');
   else
-    Logger.log("Connected!");
+    Logger.log(activeUser+' loaded client list for form');
     
   stmt.close();
   conn.close();
   if(conn.isClosed())
-    Logger.log("Disconnected :(!");
+    Logger.log(activeUser+' disconnected from database.(Form)');
   else
-    Logger.log("Connected!");
+    Logger.log(activeUser+' failed to disconnect to database.(Form)');
   var json = JSON.stringify(arr);
   console.info('Getting Client List for Forms');
   return json;
@@ -156,8 +158,17 @@ function addCoomLog(data, time,staffId){
   var commId;
   var query = "insert into communications_log(ClientId,CommNote,CommType,DateOfComm,Timestamp,TimeOfComm,DurationOfComm,EntityContacted,ContactPersonName,DocumentReceived,StaffId) values('"+data['client']+"','"+data['communicationNotes']+"','"+data['communicationType']+"','"+data['dateOfCommunication']+"','"+time+"','"+data['timeOfCommunication']+"','"+data['durOfCommunication']+"','"+data['entityContacted']+"','"+data['contactName']+"','"+data['documentsReceived']+"',"+staffId+");";
   var exe = stmt.execute(query);
+  if(conn.isClosed())
+    Logger.log(activeUser+' failed to connect to insert communication log.');
+  else
+    Logger.log(activeUser+' connected to database to insert communication log');
+    
   stmt.close();
   conn.close();
+  if(conn.isClosed())
+    Logger.log(activeUser+' disconnected from database.(Add Log)');
+  else
+    Logger.log(activeUser+' failed to disconnect to database.(Add Log)');
   return "Communication Log Submitted";
   }
   catch(e){
@@ -184,8 +195,17 @@ function loadStaff(){
   arr.push(obj);
   obj = {};
   }
+  if(conn.isClosed())
+    Logger.log(activeUser+' failed to load staff list.');
+  else
+    Logger.log(activeUser+' loaded staff list.');
+    
   stmt.close();
   conn.close();
+  if(conn.isClosed())
+    Logger.log(activeUser+' disconnected from database.(Load Staff)');
+  else
+    Logger.log(activeUser+' failed to disconnect to database.(Load Staff)');
   var json = JSON.stringify(arr);
   return json;
   console.info('Loading Staff List');
@@ -212,8 +232,17 @@ function loadLogs(clientId,staffId){
   arr.push(obj);
   obj = {};
   }
+  if(conn.isClosed())
+    Logger.log(activeUser+' failed to load communication logs.');
+  else
+    Logger.log(activeUser+' loaded communication logs.');
+    
   stmt.close();
   conn.close();
+  if(conn.isClosed())
+    Logger.log(activeUser+' disconnected from database.(Load Logs)');
+  else
+    Logger.log(activeUser+' failed to disconnect to database.(Load Logs)');
   var json = JSON.stringify(arr);
   return json;
   console.info('Loading Logs based on selected option');
