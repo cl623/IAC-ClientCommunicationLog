@@ -3,6 +3,7 @@
   var data;
   var user;
   var staffId;
+  var staffName;
  //=================================================================================================================================================================
  //-----------------------------------Progress Bar--------------------------------------------------------------------------------------------------------------
  //=================================================================================================================================================================
@@ -84,9 +85,9 @@ function showEMessage(msg){
     var info = JSON.parse(data);
     $.each(info,function(index,object){
       if(object['IacEmail'] == user){
-        staffId = object['StaffId'];
-        
-      }
+        staffId = object['StaffId'];  
+        staffName = object['Name'];
+      }      
     });
   }
   
@@ -320,6 +321,7 @@ function submitLog(){
 }
 
 
+
 function clearForm(submitMessage){
   var elements = document.getElementById('form').elements;
   for(var i=0; i < elements.length; i++){
@@ -344,4 +346,17 @@ function disableOther(check, text){
 function toLog(){
   window.location.href = '<?=url?>?page=Log'
 }
+
+//$('#templateCheck').click(function(){
+//  $.
+//}
+
+function showTemplate(){
+  var template = 'IAC Staff Member Name/Title: '+staffName+' / [TITLE] \n \nDate of Service (Appointment): [MM/DD/YYYY] \n \nTime of Service (Appointment): [HH:MM AM/PM] \n \nOn this day (which is within 24 hours of my scheduled in-home appointment), I communicated with the above-named household member of the above-named client and verified that in the most recent 14-day period (14 days prior to the date of this phone call): \n \n1. To the best of my knowledge, neither I, nor any member of my household, have experienced Fever (100.4 degrees F or higher), cough, and/or shortness of breath, nor been in direct contact with anyone known to have received a confirmed or presumptive confirmed diagnosis of COVID-19. \n \n2. To the best of the above-named client’s household member’s knowledge, neither the client nor any member of the client’s household, have experienced Fever (100.4 degrees F or higher), cough, and/or shortness of breath, nor have been in direct contact with anyone known to have received a confirmed or presumptive confirmed diagnosis of COVID-19. \n \nNote to Staff:  The IAC staff member(s) scheduled to provide in-home services should not enter the household of any client unless the above-noted verification has first been obtained/provided and documented in an email to the IAC staff member(s) direct supervisor.';
+  if(document.getElementById('templateCheck').checked)
+    document.getElementById('communicationNotes').value = template;
+  else
+    document.getElementById('communicationNotes').value = '';
+}
+
 </script>
