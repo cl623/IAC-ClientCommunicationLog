@@ -104,8 +104,7 @@ function getClientNameDbLog(staffId){
     
   stmt.close();
   conn.close();
-  if(conn.isClosed())
-    Logger.log(activeUser+' disconnected from database.(Logs)');
+  if(conn.isClosed()){}
   else
     Logger.log(activeUser+' failed to disconnect to database.(Logs)');
   var json = JSON.stringify(arr);
@@ -141,8 +140,7 @@ function getClientNameDbForm(){
     
   stmt.close();
   conn.close();
-  if(conn.isClosed())
-    Logger.log(activeUser+' disconnected from database.(Form)');
+  if(conn.isClosed()){}
   else
     Logger.log(activeUser+' failed to disconnect to database.(Form)');
   var json = JSON.stringify(arr);
@@ -165,8 +163,7 @@ function addCoomLog(data, time,staffId){
     
   stmt.close();
   conn.close();
-  if(conn.isClosed())
-    Logger.log(activeUser+' disconnected from database.(Add Log)');
+    if(conn.isClosed()){}
   else
     Logger.log(activeUser+' failed to disconnect to database.(Add Log)');
   return "Communication Log Submitted";
@@ -202,8 +199,7 @@ function loadStaff(){
     
   stmt.close();
   conn.close();
-  if(conn.isClosed())
-    Logger.log(activeUser+' disconnected from database.(Load Staff)');
+  if(conn.isClosed()){}
   else
     Logger.log(activeUser+' failed to disconnect to database.(Load Staff)');
   var json = JSON.stringify(arr);
@@ -239,8 +235,7 @@ function loadLogs(clientId,staffId){
     
   stmt.close();
   conn.close();
-  if(conn.isClosed())
-    Logger.log(activeUser+' disconnected from database.(Load Logs)');
+  if(conn.isClosed()){}
   else
     Logger.log(activeUser+' failed to disconnect to database.(Load Logs)');
   var json = JSON.stringify(arr);
