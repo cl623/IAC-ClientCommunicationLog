@@ -28,7 +28,7 @@ function clientSearch(){
 function getUser(){
   var user = Session.getActiveUser().getEmail()
   activeUser = user;
-  console.info(user+ " attemping...");
+  console.info(user+ " Logged into WebApp");
   return user;
 }
 
