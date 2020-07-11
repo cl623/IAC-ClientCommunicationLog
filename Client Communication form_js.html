@@ -252,6 +252,7 @@ $("#submitForm").click( function() {
       $("#documentsReceivedModal").text('');
       $("#communicationNotesModal").text('');
       
+      $("#clientNameModal").append($( "#clientNames option:selected" ).text());
       $("#entityContactedModal").append(form_data['entityContacted']);
       $("#contactNameModal").append(form_data['contactName']);
       $("#communicationTypeModal").append(form_data['communicationType']);
