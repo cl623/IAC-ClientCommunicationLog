@@ -202,6 +202,7 @@ $("#submitForm").click( function() {
   let unfinished = false;
   let required = []
   let elements = document.getElementById('form').elements;
+  //If user didnt fill out all fields, mark required
   for(var i = 0 ; i < elements.length; i++){
     elements[i].classList.remove('missing');
     if(elements[i].value === '' && elements[i].id != 'otherEntity' && elements[i].id != 'docOther'){
@@ -215,23 +216,31 @@ $("#submitForm").click( function() {
     required[0].scrollIntoView({behavior: "smooth"});
     required.splice(0, required.length)
   }
+  //Otherwise
   else{
     let t = timestamp.setHours(0,0,0,0);
     let temp = new Date(document.getElementsByName("dateOfCommunication")[0].value)
+    //Check if they post-dated communication date, error if so
     if(temp > t){
      alert("NO TIME TRAVELING");
      document.getElementsByName("dateOfCommunication")[0].classList.add('missing');
      document.getElementsByName("dateOfCommunication")[0].scrollIntoView({behavior: "smooth"});
     }
+    //Otherwise adjust values and show modal
     else{
       var form_data = $("#form").getFormObject();
       if(form_data.entityContacted == "Other")
         form_data.entityContacted = $("#otherEntity").val();
       if(document.getElementById("docOtherCheck").checked){
-        alert(form_data.documentsReceived)
-        form_data.documentsReceived.pop()
-        form_data.documentsReceived.push($("#docOther").val());
+        if(Array.isArray(form_data.documentsReceived))
+          form_data.documentsReceived[form_data.documentsReceived.length - 1] = $("#docOther").val()
+        else
+          form_data.documentsReceived = $("#docOther").val()
         }
+      else{
+        if(Array.isArray(form_data.documentsReceived))
+          form_data.documentsReceived = form_data.documentsReceived.join(', ');
+      }
       console.log(form_data)
       console.log(timestamp,staffId);
       $("#entityContactedModal").text('');
@@ -284,7 +293,7 @@ function submitLog(){
      document.getElementsByName("dateOfCommunication")[0].scrollIntoView({behavior: "smooth"});
     }
     else{
-      $('#ex2').modal();
+      
       
       //Form adjustments for query
       var form_data = $("#form").getFormObject();
@@ -292,13 +301,6 @@ function submitLog(){
       //Other option are added to object as necessary
       if(form_data.entityContacted == "Other")
         form_data.entityContacted = $("#otherEntity").val();
-      if(document.getElementById("docOtherCheck").checked){
-        form_data.documentsReceived.pop()
-        form_data.documentsReceived.push($("#docOther").val());
-        }
-      if(form_data.documentsReceived.length < 2)
-        form_data.documentsReceived = form_data.documentsReceived.join(', ');
-      
       
       //Time translated
       var sec = form_data.durOfCommunication * 60;
@@ -314,7 +316,6 @@ function submitLog(){
       form_data['communicationNotes'] = form_data['communicationNotes'].replace(/'/g, "\\\'");
       form_data['entityContacted'] = form_data['entityContacted'].replace(/'/g, "\\\'");
       form_data['contactName'] = form_data['contactName'].replace(/'/g, "\\\'");
-      form_data['documentsReceived'] = form_data['documentsReceived'].replace(/'/g, "\\\'");
       google.script.run.withSuccessHandler(clearForm).addCoomLog(form_data,timestamp,staffId);
 
       }
