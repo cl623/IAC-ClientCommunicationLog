@@ -222,7 +222,7 @@ $("#submitForm").click( function() {
     let temp = new Date(document.getElementsByName("dateOfCommunication")[0].value)
     //Check if they post-dated communication date, error if so
     if(temp > t){
-     alert("NO TIME TRAVELING");
+     alert("Attempted to post-date [Date of Communication]. Please enter valid date.");
      document.getElementsByName("dateOfCommunication")[0].classList.add('missing');
      document.getElementsByName("dateOfCommunication")[0].scrollIntoView({behavior: "smooth"});
     }
@@ -243,6 +243,7 @@ $("#submitForm").click( function() {
       }
       console.log(form_data)
       console.log(timestamp,staffId);
+      $("#clientNameModal").text('');
       $("#entityContactedModal").text('');
       $("#contactNameModal").text('');
       $("#communicationTypeModal").text('');
@@ -289,7 +290,7 @@ function submitLog(){
     let t = timestamp.setHours(0,0,0,0);
     let temp = new Date(document.getElementsByName("dateOfCommunication")[0].value)
     if(temp > t){
-     alert("NO TIME TRAVELING");
+     alert("Attempted to post-date [Date of Communication]. Please enter valid date.");
      document.getElementsByName("dateOfCommunication")[0].classList.add('missing');
      document.getElementsByName("dateOfCommunication")[0].scrollIntoView({behavior: "smooth"});
     }
@@ -312,12 +313,12 @@ function submitLog(){
       form_data.durOfCommunication = (hours+':'+minutes+':00')
       var timezone = new Date().getTimezoneOffset() * 60000;
       timestamp = (new Date(Date.now() - 14400000)).toISOString().slice(0, 19).replace('T', ' ');
+      console.log(form_data);
+      console.log(timestamp,staffId);
       form_data['communicationNotes'] = form_data['communicationNotes'].replace(/'/g, "\\\'");
       form_data['entityContacted'] = form_data['entityContacted'].replace(/'/g, "\\\'");
       form_data['contactName'] = form_data['contactName'].replace(/'/g, "\\\'");
       form_data['dateOfCommunication'] = form_data['dateOfCommunication'].replace(/(..).(..).(....)/, "$3-$1-$2");
-      console.log(form_data);
-      console.log(timestamp,staffId);
       google.script.run.withSuccessHandler(clearForm).addCoomLog(form_data,timestamp,staffId);
 
       }
