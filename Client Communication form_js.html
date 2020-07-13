@@ -323,7 +323,6 @@ function submitLog(){
       form_data['communicationNotes'] = form_data['communicationNotes'].replace(/'/g, "\\\'");
       form_data['entityContacted'] = form_data['entityContacted'].replace(/'/g, "\\\'");
       form_data['contactName'] = form_data['contactName'].replace(/'/g, "\\\'");
-      form_data['dateOfCommunication'] = new Date(form_data['dateOfCommunication']).toLocaleDateString('fr-CA');
       google.script.run.withSuccessHandler(clearForm).addCoomLog(form_data,timestamp,staffId);
 
       }
