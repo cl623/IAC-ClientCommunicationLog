@@ -312,11 +312,12 @@ function submitLog(){
       form_data.durOfCommunication = (hours+':'+minutes+':00')
       var timezone = new Date().getTimezoneOffset() * 60000;
       timestamp = (new Date(Date.now() - 14400000)).toISOString().slice(0, 19).replace('T', ' ');
-      console.log(form_data);
-      console.log(timestamp,staffId);
       form_data['communicationNotes'] = form_data['communicationNotes'].replace(/'/g, "\\\'");
       form_data['entityContacted'] = form_data['entityContacted'].replace(/'/g, "\\\'");
       form_data['contactName'] = form_data['contactName'].replace(/'/g, "\\\'");
+      form_data['dateOfCommunication'] = form_data['dateOfCommunication'].replace(/(..).(..).(....)/, "$3-$1-$2");
+      console.log(form_data);
+      console.log(timestamp,staffId);
       google.script.run.withSuccessHandler(clearForm).addCoomLog(form_data,timestamp,staffId);
 
       }
