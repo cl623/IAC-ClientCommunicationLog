@@ -219,8 +219,14 @@ $("#submitForm").click( function() {
   else{
     let t = timestamp.setHours(0,0,0,0);
     let temp = new Date(document.getElementsByName("dateOfCommunication")[0].value)
+    if(document.getElementById("clientNames").value == "NONE SELECTED"){
+     alert("Please select a client!");
+     document.getElementById("clientNames").classList.add('missing');
+     document.getElementById("clientNames").scrollIntoView({behavior: "smooth"});
+     }
+    
     //Check if they post-dated communication date, error if so
-    if(temp > t){
+    else if(temp > t){
      alert("Attempted to post-date [Date of Communication]. Please enter valid date.");
      document.getElementsByName("dateOfCommunication")[0].classList.add('missing');
      document.getElementsByName("dateOfCommunication")[0].scrollIntoView({behavior: "smooth"});
@@ -317,7 +323,6 @@ function submitLog(){
       form_data['communicationNotes'] = form_data['communicationNotes'].replace(/'/g, "\\\'");
       form_data['entityContacted'] = form_data['entityContacted'].replace(/'/g, "\\\'");
       form_data['contactName'] = form_data['contactName'].replace(/'/g, "\\\'");
-      form_data['dateOfCommunications'] = new Date(form_data['dateOfCommunications']).toLocaleDateString('fr-CA');
       google.script.run.withSuccessHandler(clearForm).addCoomLog(form_data,timestamp,staffId);
 
       }

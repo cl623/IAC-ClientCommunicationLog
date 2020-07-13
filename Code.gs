@@ -170,7 +170,7 @@ function addCoomLog(data, time,staffId){
   return "Communication Log Submitted";
   }
   catch(e){
-    console.error('Error submitting log for '+activeUser+' Object Payload:'+data);
+    console.error('Error submitting log for '+activeUser+' Object Payload:'+JSON.stringify(data) + "["+e+"]");
     return "Error Submitting, Please Try Again.\n\n If Error Persists Please Contact:\n it@innovativeautism.org";
   }
   console.info('Communications Log added');
