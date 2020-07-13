@@ -64,6 +64,18 @@ function connect(connection){
   return conn;
     
 }
+ 
+function cacheClientNameLog(staffId){
+  var cache = CacheService.getUserCache();
+  var cached = cache.get('nameListLog')
+  if(cached != null){
+   return cached; 
+   getClientNameDbLog(staffId)
+  } 
+  getClientNameDbLog(staffId)
+  return cache.get('nameListLog');
+}
+
 function getClientNameDbLog(staffId){
   var Properties = PropertiesService.getScriptProperties().getProperties();
   var whitelist = Properties.whitelist.split(',');
@@ -108,8 +120,8 @@ function getClientNameDbLog(staffId){
     Logger.log(activeUser+' failed to disconnect to database.(Logs)');
   var json = JSON.stringify(arr);
   console.info('Getting Client List for Logs');
-  return json;
-  
+  var cache = CacheService.getUserCache();
+  cache.put("nameListLog", json, 1500)
 }
 
 function cacheClientName(){
@@ -155,7 +167,6 @@ function getClientNameDbForm(){
   console.info('Getting Client List for Forms');
   var cache = CacheService.getScriptCache();
   cache.put("nameList", json, 1500)
-  
 }
 
 function addCoomLog(data, time,staffId){
