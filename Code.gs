@@ -89,10 +89,8 @@ function getClientNameDbLog(staffId){
   var obj = {};
   while(data.next()){
     
-   for( var x = 1; x < numCol+1; x++){
-      var colName = data.getMetaData().getColumnName(x);
-      obj[colName] = data.getString(x);      
-   }
+  obj['Name'] = data.getString('Name');     
+  obj['ClientId'] = data.getString('ClientId'); 
         
   arr.push(obj);
   obj = {};
@@ -125,10 +123,8 @@ function getClientNameDbForm(){
     
   while(data.next()){
     
-   for( var x = 1; x < numCol+1; x++){
-      var colName = data.getMetaData().getColumnName(x);
-      obj[colName] = data.getString(x);      
-   }
+  obj['Name'] = data.getString('Name');     
+  obj['ClientId'] = data.getString('ClientId'); 
             
   arr.push(obj);
   obj = {};
@@ -187,10 +183,10 @@ function loadStaff(){
   var obj = {};
   while(data.next()){
     
-    for( var x = 1; x < numCol+1; x++){
-      var colName = data.getMetaData().getColumnName(x);
-      obj[colName] = data.getString(x);      
-    }
+  obj['StaffId'] = data.getString('StaffId');     
+  obj['IacEmail'] = data.getString('IacEmail'); 
+  obj['Name'] = data.getString('Name');
+  
   arr.push(obj);
   obj = {};
   }
@@ -214,19 +210,26 @@ function loadLogs(clientId,staffId){
   var conn = connect(dbConnect);
   var stmt = conn.createStatement();
   if(clientId == 'All Clients')
-    var query = "select l.Timestamp,concat(s.FirstName,' ',s.LastName) as StaffName,l.EntityContacted,l.ContactPersonName,l.CommType,date_format(l.DateOfComm,'%m/%e/%Y'),TIME_FORMAT(l.TimeOfComm,'%I%:%i %p'),time_to_sec(l.DurationOfComm) as DurationOfComm,l.CommNote,l.DocumentReceived from communications_log l inner join client c on l.ClientId=c.ClientId inner join staff s on l.StaffId=s.StaffId where l.StaffId ="+staffId+" order by l.DateOfComm DESC,l.TimeOfComm DESC;";
+    var query = "select l.Timestamp,concat(s.FirstName,' ',s.LastName) as StaffName,l.EntityContacted,l.ContactPersonName,l.CommType,date_format(l.DateOfComm,'%m/%e/%Y') as DateOfComm,TIME_FORMAT(l.TimeOfComm,'%I%:%i %p') as TimeOfComm,time_to_sec(l.DurationOfComm) as DurationOfComm,l.CommNote,l.DocumentReceived from communications_log l inner join client c on l.ClientId=c.ClientId inner join staff s on l.StaffId=s.StaffId where l.StaffId ="+staffId+" order by l.DateOfComm DESC,l.TimeOfComm DESC;";
   else
-    var query = "select l.Timestamp,concat(s.FirstName,' ',s.LastName) as StaffName,l.EntityContacted,l.ContactPersonName,l.CommType,date_format(l.DateOfComm,'%m/%e/%Y'),TIME_FORMAT(l.TimeOfComm,'%I%:%i %p'),time_to_sec(l.DurationOfComm) as DurationOfComm,l.CommNote,l.DocumentReceived from communications_log l inner join client c on l.ClientId=c.ClientId inner join staff s on l.StaffId=s.StaffId where l.ClientId ="+clientId+" order by l.DateOfComm DESC,l.TimeOfComm DESC;";
+    var query = "select l.Timestamp,concat(s.FirstName,' ',s.LastName) as StaffName,l.EntityContacted,l.ContactPersonName,l.CommType,date_format(l.DateOfComm,'%m/%e/%Y') as DateOfComm,TIME_FORMAT(l.TimeOfComm,'%I%:%i %p') as TimeOfComm,time_to_sec(l.DurationOfComm) as DurationOfComm,l.CommNote,l.DocumentReceived from communications_log l inner join client c on l.ClientId=c.ClientId inner join staff s on l.StaffId=s.StaffId where l.ClientId ="+clientId+" order by l.DateOfComm DESC,l.TimeOfComm DESC;";
   var data = stmt.executeQuery(query);
   var numCol = data.getMetaData().getColumnCount();
   var arr = [];
   var obj = {};
   while(data.next()){
     
-    for( var x = 1; x < numCol+1; x++){
-      var colName = data.getMetaData().getColumnName(x);
-      obj[colName] = data.getString(x);      
-    }
+  obj['Timestamp'] = data.getString('Timestamp');
+  obj['StaffName'] = data.getString('StaffName');
+  obj['EntityContacted'] = data.getString('EntityContacted');     
+  obj['ContactPersonName'] = data.getString('ContactPersonName');
+  obj['CommType'] = data.getString('CommType');    
+  obj['DateOfComm'] = data.getString('DateOfComm'); 
+  obj['TimeOfComm'] = data.getString('TimeOfComm');
+  obj['DurationOfComm'] = data.getString('DurationOfComm');
+  obj['CommNote'] = data.getString('CommNote');     
+  obj['DocumentReceived'] = data.getString('DocumentReceived');
+  
   arr.push(obj);
   obj = {};
   }
