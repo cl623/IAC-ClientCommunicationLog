@@ -89,11 +89,12 @@ function showEMessage(msg){
   function clientInfo(option){
     var clientId = $("#clientName option:selected").val();
     id = clientId;
+    $('#commTable tbody tr').remove();
     google.script.run.withSuccessHandler(displayLogs).loadLogs(clientId,staffId);
   }
   
   function displayLogs(data){
-    $('#commTable tbody tr').remove();
+    
     var logs = JSON.parse(data);
     $.each(logs, function(index,object){
       var tr = $('<tr class=row title="Date Logged: '+object['Timestamp']+'"></tr>');
