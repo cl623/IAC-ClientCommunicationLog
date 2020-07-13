@@ -1,6 +1,7 @@
 var activeUser = getUser();
 function doGet(e) {
   if (e.parameter && e.parameter['page'] == 'Form') {
+   
    return HtmlService.createTemplateFromFile("Client Communication Form").evaluate().setTitle("Client Communication Form").setFaviconUrl('https://le-cdn.website-editor.net/890182a9e4384ae6930cd502f9f32152/dms3rep/multi/opt/IAC+FINAL+%7C+Large-480w.png');
   }
   else{
@@ -111,6 +112,17 @@ function getClientNameDbLog(staffId){
   
 }
 
+function cacheClientName(){
+  var cache = CacheService.getScriptCache();
+  var cached = cache.get('nameList')
+  if(cached != null){
+   return cached; 
+   getClientNameDbForm()
+  } 
+  getClientNameDbForm()
+  return cache.get('nameList');
+}
+
 function getClientNameDbForm(){
   var dbConnect = databaseConnect();
   var conn = connect(dbConnect);
@@ -141,7 +153,9 @@ function getClientNameDbForm(){
     Logger.log(activeUser+' failed to disconnect to database.(Form)');
   var json = JSON.stringify(arr);
   console.info('Getting Client List for Forms');
-  return json;
+  var cache = CacheService.getScriptCache();
+  cache.put("nameList", json, 1500)
+  
 }
 
 function addCoomLog(data, time,staffId){

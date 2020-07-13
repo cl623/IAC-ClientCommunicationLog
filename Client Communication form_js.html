@@ -11,7 +11,7 @@
 var SuccessTime = 3000;
 function move() {
   google.script.run.withSuccessHandler(setUser).getUser();
-  google.script.run.withSuccessHandler(selectFill).getClientNameDbForm();   
+  google.script.run.withSuccessHandler(selectFill).cacheClientName();   
   google.script.run.withSuccessHandler(setStaffId).loadStaff();
   width=1;
   $("#myBar").show();
@@ -33,7 +33,7 @@ function showMessage(msg){
     $("#user").html("Logged in as: <strong>" + user + "</strong>");
 	$("#SuccessMsg").show(800);
     var elem = document.getElementById("myBar");
-    var id = setInterval(frame, 25);
+    var id = setInterval(frame, 5);
     function frame() {
       if (width >= 100) {
         clearInterval(id);
