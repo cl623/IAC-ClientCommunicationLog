@@ -72,7 +72,6 @@ function showEMessage(msg){
   setDate();
   move();
   $('.select').select2({
-    placeholder:'wweeee',
     width:'50%'
   });
   });
@@ -318,7 +317,7 @@ function submitLog(){
       form_data['communicationNotes'] = form_data['communicationNotes'].replace(/'/g, "\\\'");
       form_data['entityContacted'] = form_data['entityContacted'].replace(/'/g, "\\\'");
       form_data['contactName'] = form_data['contactName'].replace(/'/g, "\\\'");
-      form_data['dateOfCommunication'] = form_data['dateOfCommunication'].replace(/(..).(..).(....)/, "$3-$1-$2");
+      form_data['dateOfCommunications'] = new Date(form_data['dateOfCommunications']).toLocaleDateString('fr-CA');
       google.script.run.withSuccessHandler(clearForm).addCoomLog(form_data,timestamp,staffId);
 
       }
