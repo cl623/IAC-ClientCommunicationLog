@@ -69,6 +69,9 @@ function showEMessage(msg){
  *
  */
  $(document).ready(function(){
+   if (!isDateSupported()) {
+	$("#chromeFallback").html("We suggest getting the latest version of Google Chrome when using our applications. Download <a href='https://www.google.com/chrome/'>here <i class='fa fa-chrome' aria-hidden='true'></i></a>. ");
+    }
   setDate();
   move();
   $('.select').select2({
@@ -197,43 +200,124 @@ $.fn.getFormObject = function() {
 
 // This is how it's used
 $("#submitForm").click( function() {
+  var form_data = $("#form").getFormObject();
+  var x = document.getElementsByClassName("question");
+  for (var i = 0; i < x.length; i++) {
+    x[i].style.backgroundColor = "White";
+  }
   var timestamp = new Date();
   let unfinished = false;
   let required = []
   let elements = document.getElementById('form').elements;
   //If user didnt fill out all fields, mark required
-  for(var i = 0 ; i < elements.length; i++){
-    elements[i].classList.remove('missing');
-    if(elements[i].value === '' && elements[i].id != 'otherEntity' && elements[i].id != 'docOther'){
-      unfinished = true;
-      required.push(elements[i])
-      elements[i].classList.add("missing");
+  if(document.getElementById("clientNames").value == "NONE SELECTED"){
+     document.getElementById("clientNames").parentNode.style.backgroundColor = '#ffcccc';
+     }
+  //ENTITY CONTACTED
+  if(!form_data.hasOwnProperty('entityContacted')){
+    let temp = document.getElementById('EC')
+    temp.style.backgroundColor = '#ffcccc';
+    unfinished = true;
+  }
+  //CONTACT NAME
+  if(form_data.contactName === ''){
+    let temp = document.getElementById('CN')
+    temp.style.backgroundColor = '#ffcccc';
+    unfinished = true;
+  }
+  //DATE OF COMMUNICATION
+  if(form_data.dateOfCommunication === ''){
+    let temp = document.getElementById('DC')
+    temp.style.backgroundColor = '#ffcccc';
+    unfinished = true;
+  }
+    //regex for date format -> for when datepicker is unsupported by browser
+  else{
+    let date_regex = /^\d{4}-\d{2}-\d{2}$/
+    let validate = date_regex.test($("input[name=dateOfCommunication]").val())
+    if(!validate){
+      alert("Please enter date in the following format: \nYYYY-MM-DD");
+        let temp = document.getElementById('DC')
+        temp.style.backgroundColor = '#ffcccc';
+        unfinished = true;
       }
-  }  
+  }
+  //TIME OF COMMUNICATION
+  if(form_data.timeOfCommunication === ''){
+    let temp = document.getElementById('TC')
+    temp.style.backgroundColor = '#ffcccc';
+    unfinished = true;
+  } 
+    //regex for time format -> for when time is unsupported by browser
+  else{
+    let date_regex = /^\d{2}:\d{2}$/
+    let validate = date_regex.test($("input[name=timeOfCommunication]").val())
+    if(!validate){
+      alert("Please enter in 24-hour time format: \nhh:mm");
+        let temp = document.getElementById('TC')
+        temp.style.backgroundColor = '#ffcccc';
+        unfinished = true;
+      }
+      //check if time input is not something rediculous like 75:99
+    else{
+      
+    }
+  }
+  //DURATION OF COMMUNICATION
+  if(form_data.durOfCommunication === ''){
+    let temp = document.getElementById('DuC')
+    temp.style.backgroundColor = '#ffcccc';
+    unfinished = true;
+  }
+  else{
+    if($("input[name=durOfCommunication").val() < 0){
+      alert("Can't enter negative number!")
+      let temp = document.getElementById('DuC')
+      temp.style.backgroundColor = '#ffcccc';
+      unfinished = true;
+      }
+  }
+  //COMMUNCATION TYPE
+  if(!form_data.hasOwnProperty('communicationType')){
+    let temp = document.getElementById('CT')
+    temp.style.backgroundColor = '#ffcccc';
+    unfinished = true;
+  }
+  //DOCUMENTS RECEIVED
+  if(!form_data.hasOwnProperty('documentsReceived')){
+    let temp = document.getElementById('DR')
+    temp.style.backgroundColor = '#ffcccc';
+    unfinished = true;
+  }
+  if(form_data.communicationNotes === ''){
+    let temp = document.getElementById('CoN')
+    temp.style.backgroundColor = '#ffcccc';
+    unfinished = true;
+  }
+  
   if(unfinished){
     alert('Please fill out all the required fields');
-    required[0].scrollIntoView({behavior: "smooth"});
-    required.splice(0, required.length)
+    for(var i = 0; i < x.length; i++){
+      if(x[i].style.backgroundColor == 'rgb(255, 204, 204)'){
+        x[i].scrollIntoView({behavior: "smooth"});
+        break
+        }
+    }
   }
   //Otherwise
   else{
     let t = timestamp.setHours(0,0,0,0);
     let temp = new Date(document.getElementsByName("dateOfCommunication")[0].value)
-    if(document.getElementById("clientNames").value == "NONE SELECTED"){
-     alert("Please select a client!");
-     document.getElementById("clientNames").classList.add('missing');
-     document.getElementById("clientNames").scrollIntoView({behavior: "smooth"});
-     }
+
     
     //Check if they post-dated communication date, error if so
-    else if(temp > t){
+    if(temp > t){
      alert("Attempted to post-date [Date of Communication]. Please enter valid date.");
      document.getElementsByName("dateOfCommunication")[0].classList.add('missing');
      document.getElementsByName("dateOfCommunication")[0].scrollIntoView({behavior: "smooth"});
     }
     //Otherwise adjust values and show modal
     else{
-      var form_data = $("#form").getFormObject();
       if(form_data.entityContacted == "Other")
         form_data.entityContacted = $("#otherEntity").val();
       if(document.getElementById("docOtherCheck").checked){
@@ -274,6 +358,7 @@ $("#submitForm").click( function() {
     }
 });
 function submitLog(){
+  var form_data = $("#form").getFormObject();
   var timestamp = new Date();
   let unfinished = false;
   let required = []
@@ -285,7 +370,7 @@ function submitLog(){
       required.push(elements[i])
       elements[i].classList.add("missing");
       }
-  }  
+  }
   if(unfinished){
     alert('Please fill out all the required fields');
     required[0].scrollIntoView({behavior: "smooth"});
@@ -367,5 +452,13 @@ function showTemplate(){
   else
     document.getElementById('communicationNotes').value = '';
 }
+
+var isDateSupported = function () {
+	var input = document.createElement('input');
+	var value = 'a';
+	input.setAttribute('type', 'date');
+	input.setAttribute('value', value);
+	return (input.value !== value);
+};
 
 </script>

@@ -23,10 +23,11 @@
     
     <h1><img src='https://le-cdn.website-editor.net/890182a9e4384ae6930cd502f9f32152/dms3rep/multi/opt/IAC+FINAL+%7C+Large-480w.png' height= 70px; style="margin: 3px;"> Client Communication Form </h1>
     <p id=user> </p>
-     
+    <br>
+     <span id=chromeFallback> </span>
     <div style="background-color: Gray; border: 1px solid Black; padding: 15px;" id=myHeader> <!-- Heading Section for Client Lookup and User Buttons -->
       <div>
-         Use this form to record all communication between the client's family, referring provider or other care providers.
+         Use this form to record all communication between the client's family, referring provider or other care providers. 
          <br><br>
          The communications can later be viewed on the Client Communication Log:
          <button class="btn btn-primary" onclick="window.open(href='<?=url?>?page=Log','_blank')">Client Communication Log</button>
@@ -40,7 +41,7 @@
         <option value="NONE SELECTED" disabled selected>Choose Client</option>
         </select> 
     </div>
-    <div class=question>
+    <div class=question id=EC>
       Entity Contacted<span>*</span>
       <br>
       <label>
@@ -76,13 +77,13 @@
       </label>
     </div>
     
-    <div class=question>
+    <div class=question id=CN>
     Contact Person's Name<span>*</span>
     <br>
     <input type=text placeholder='Your Answer' name=contactName maxlength="400" required >
     </div>
     
-    <div class=question>
+    <div class=question id=CT>
     Communication Type<span>*</span>
     <br>
     <label>
@@ -110,25 +111,25 @@
     </label>
     </div>
     
-    <div class=question>
+    <div class=question id=DC>
     Date of Communication<span>*</span>
     <br>
     <input type=date name='dateOfCommunication' required>
     </div>
     
-    <div class=question>
+    <div class=question id=TC>
     Time of Communication<span>*</span>
     <br>
     <input type=time name='timeOfCommunication' required>
     </div>
     
-    <div class=question>
+    <div class=question id=DuC>
     Duration of Communication (Minutes)<span>*</span>
     <br>
     <input type=number min='0' max='1440' maxlength='1000' name='durOfCommunication' title="<Minutes>" placeholder="00" required>
     </div>
     
-    <div class=question>
+    <div class=question id=DR>
     Documents Received<span>*</span>
     <br>
     <label>
@@ -184,7 +185,7 @@
     </label>
     </div>
     
-    <div class=question>
+    <div class=question id=CoN>
     Communication Notes<span> * </span> &nbsp;&nbsp;&nbsp;&nbsp;  <input type=checkbox name='templateCheck' id='templateCheck' onclick='showTemplate(this)' > Health Screening Template
     <br>
     <textarea id='communicationNotes' name='communicationNotes' style='width: 100%;' maxlength="65000" rows="30"  required></textarea>

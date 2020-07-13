@@ -90,6 +90,16 @@ function showEMessage(msg){
     var clientId = $("#clientName option:selected").val();
     id = clientId;
     $('#commTable tbody tr').remove();
+    var elem = document.getElementById("myBar");
+    var id = setInterval(frame, 25);
+    function frame() {
+      if (width >= 100) {
+        clearInterval(id);
+      } else {
+        width++;
+       elem.style.width = width + '%';
+      }
+    }
     google.script.run.withSuccessHandler(displayLogs).loadLogs(clientId,staffId);
   }
   
@@ -97,7 +107,7 @@ function showEMessage(msg){
     
     var logs = JSON.parse(data);
     $.each(logs, function(index,object){
-      var tr = $('<tr class=row title="Date Logged: '+object['Timestamp']+'"></tr>');
+      var tr = $('<tr class=row title="Communication note submitted on: '+object['Timestamp']+'"></tr>');
       $.each(object,function(key,value){
         if(key=='Timestamp'){}
         else{
@@ -110,6 +120,7 @@ function showEMessage(msg){
       tr.appendTo('#commTable tbody');
       
     });
+    $("#myBar").hide(150);
   }
   
   function setStaffId(data){
