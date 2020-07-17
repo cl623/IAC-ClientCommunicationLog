@@ -18,7 +18,7 @@ function move() {
   width=1;
   $("#myBar").show();
   var elem = document.getElementById("myBar");
-  var id = setInterval(frame, 120);
+  var id = setInterval(frame, 50);
   function frame() {
     if (width >= 90) {
       clearInterval(id);
@@ -37,7 +37,7 @@ function showMessage(msg){
     $("#user").html("Logged in as: <strong>" + user + "</strong>");
 	$("#SuccessMsg").show(800);
     var elem = document.getElementById("myBar");
-    var id = setInterval(frame, 25);
+    var id = setInterval(frame, 5);
     function frame() {
       if (width >= 100) {
         clearInterval(id);
@@ -91,7 +91,7 @@ function showEMessage(msg){
     id = clientId;
     $('#commTable tbody tr').remove();
     var elem = document.getElementById("myBar");
-    var id = setInterval(frame, 25);
+    var id = setInterval(frame, 5);
     function frame() {
       if (width >= 100) {
         clearInterval(id);

@@ -34,6 +34,7 @@
         <br><br>
       </div>
     </div>                <!-- End Heading Section-->
+    
     <form id=form>
     <div class=question>
     <label for="client" >Client: </label>     
@@ -41,6 +42,14 @@
         <option value="NONE SELECTED" disabled selected>Choose Client</option>
         </select> 
     </div>
+    <!--
+    <div id=SuccessMsg class="myAlert-top alert alert-success" style="display:none">
+      <strong>Success!</strong> <span id="spnMsg"></span>
+    </div>
+    <div id=ErrorMsg class="myAlert-top alert alert-danger" style="display:none">
+      <strong>Error Loading Failed: Please refresh. If problem persists please contact IT @ it@innovativeautism.org</strong> <span id="spnEMsg"></span>
+    </div>
+    -->
     <div class=question id=EC>
       Entity Contacted<span>*</span>
       <br>
@@ -126,7 +135,7 @@
     <div class=question id=DuC>
     Duration of Communication (Minutes)<span>*</span>
     <br>
-    <input type=number min='0' max='1440' maxlength='1000' name='durOfCommunication' title="<Minutes>" placeholder="00" required>
+    <input type=number min='0' max='1440' maxlength='1000' name='durOfCommunication' title="<Minutes>" required>
     </div>
     
     <div class=question id=DR>

@@ -29,8 +29,6 @@ function move() {
 
 function showMessage(msg){
     clearInterval(id)
-    $("#clientNames").prop( "disabled", false );
-    $("#user").html("Logged in as: <strong>" + user + "</strong>");
 	$("#SuccessMsg").show(800);
     var elem = document.getElementById("myBar");
     var id = setInterval(frame, 5);
@@ -47,6 +45,7 @@ function showMessage(msg){
 	  setTimeout(function(){
 		$(".myAlert-top").hide(800); 
 	  }, SuccessTime);
+    $("#clientNames").prop( "disabled", false );
 }
 
 function showEMessage(msg){
@@ -81,6 +80,7 @@ function showEMessage(msg){
 
   function setUser(email){
     user = email;
+    $("#user").html("Logged in as: <strong>" + user + "</strong>");
   }
   
   function setStaffId(data){
@@ -151,7 +151,7 @@ function showEMessage(msg){
     });
     if(clientList.length > 2){
     console.log('done');
-      showMessage('Client data loaded');
+      showMessage('Client list loaded');
     }
     else{
       showEMessage('No clients to view. ');
