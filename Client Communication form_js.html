@@ -150,7 +150,7 @@ function showEMessage(msg){
       $("#clientNames").append(o);
     });
     if(clientList.length > 2){
-    console.log('done');
+    console.log('Done');
       showMessage('Client list loaded');
     }
     else{
@@ -175,7 +175,6 @@ function showEMessage(msg){
 //      obj[item.name] = item.value; 
 //    return obj;
 //    }, {});
-//    console.log(data);
 //    google.script.run.addCoomLog(data);
 //  }
   
@@ -330,8 +329,7 @@ $("#submitForm").click( function() {
         if(Array.isArray(form_data.documentsReceived))
           form_data.documentsReceived = form_data.documentsReceived.join(', ');
       }
-      console.log(form_data)
-      console.log(timestamp,staffId);
+
       $("#clientNameModal").text('');
       $("#entityContactedModal").text('');
       $("#contactNameModal").text('');
@@ -351,7 +349,7 @@ $("#submitForm").click( function() {
       $("#durOfCommunicationModal").append(form_data['durOfCommunication']+' minutes');
       $("#documentsReceivedModal").append(form_data['documentsReceived']);
       $("#communicationNotesModal").append(form_data['communicationNotes']);
-      
+      google.script.run.logData(form_data);
       $('#ex1').modal();
 //      window.location.href = 'https://script.google.com/a/innovativeautism.org/macros/s/AKfycbz-L2lCTopdybraS6hbcJtNVqWx0XZfYcbEsr1zbe3oj-GAX81k/exec'
       }
@@ -360,23 +358,8 @@ $("#submitForm").click( function() {
 function submitLog(){
   var form_data = $("#form").getFormObject();
   var timestamp = new Date();
-  let unfinished = false;
-  let required = []
   let elements = document.getElementById('form').elements;
-  for(var i = 0 ; i < elements.length; i++){
-    elements[i].classList.remove('missing');
-    if(elements[i].value === '' && elements[i].id != 'otherEntity' && elements[i].id != 'docOther'){
-      unfinished = true;
-      required.push(elements[i])
-      elements[i].classList.add("missing");
-      }
-  }
-  if(unfinished){
-    alert('Please fill out all the required fields');
-    required[0].scrollIntoView({behavior: "smooth"});
-    required.splice(0, required.length)
-  }
-  else{
+
     let t = timestamp.setHours(0,0,0,0);
     let temp = new Date(document.getElementsByName("dateOfCommunication")[0].value)
     if(temp > t){
@@ -403,15 +386,18 @@ function submitLog(){
       form_data.durOfCommunication = (hours+':'+minutes+':00')
       var timezone = new Date().getTimezoneOffset() * 60000;
       timestamp = (new Date(Date.now() - 14400000)).toISOString().slice(0, 19).replace('T', ' ');
-      console.log(form_data);
-      console.log(timestamp,staffId);
       form_data['communicationNotes'] = form_data['communicationNotes'].replace(/'/g, "\\\'");
       form_data['entityContacted'] = form_data['entityContacted'].replace(/'/g, "\\\'");
       form_data['contactName'] = form_data['contactName'].replace(/'/g, "\\\'");
       google.script.run.withSuccessHandler(clearForm).addCoomLog(form_data,timestamp,staffId);
-
+      
+      const emailRegex = /(\w+@innovativeautism.org)/gmi
+      const recipients = form_data['communicationNotes'].match(emailRegex)
+      let title=$("#clientNames option:selected" ).text() + ' Communication Note'
+      if(recipients != null){
+        google.script.run.tagNotes(recipients, title, form_data)
       }
-    }
+   }
 }
 
 

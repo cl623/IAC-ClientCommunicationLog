@@ -18,10 +18,10 @@ function move() {
   width=1;
   $("#myBar").show();
   var elem = document.getElementById("myBar");
-  var id = setInterval(frame, 50);
+  var move = setInterval(frame, 50);
   function frame() {
     if (width >= 90) {
-      clearInterval(id);
+      clearInterval(move);
     } else {
       width++;
       elem.style.width = width + '%';
@@ -32,15 +32,15 @@ function move() {
 }
 
 function showMessage(msg){
-    clearInterval(id)
+    clearInterval(move)
     $("#clientName").prop( "disabled", false );
     $("#user").html("Logged in as: <strong>" + user + "</strong>");
 	$("#SuccessMsg").show(800);
     var elem = document.getElementById("myBar");
-    var id = setInterval(frame, 5);
+    var move = setInterval(frame, 5);
     function frame() {
       if (width >= 100) {
-        clearInterval(id);
+        clearInterval(move);
         $("#myBar").hide(150);
       } else {
         width++;
@@ -88,19 +88,31 @@ function showEMessage(msg){
   
   function clientInfo(option){
     var clientId = $("#clientName option:selected").val();
+    $("#clientName").prop( "disabled", true );
     id = clientId;
     $('#commTable tbody tr').remove();
+    width=1;
+    $('#myBar').show(100)
     var elem = document.getElementById("myBar");
-    var id = setInterval(frame, 5);
+    var move = setInterval(frame, 15);
     function frame() {
       if (width >= 100) {
-        clearInterval(id);
+        clearInterval(move);
       } else {
         width++;
        elem.style.width = width + '%';
       }
     }
-    google.script.run.withSuccessHandler(displayLogs).loadLogs(clientId,staffId);
+    if(id == 'All Clients'){
+      $('#allClientsHeader').show()
+      $('#defaultHeader').hide()
+      google.script.run.withSuccessHandler(displayLogs).loadLogs(id, staffId);
+      }
+    else{
+      $('#allClientsHeader').hide()
+      $('#defaultHeader').show()
+      google.script.run.withSuccessHandler(displayLogs).loadLogs(clientId,staffId);
+      }
   }
   
   function displayLogs(data){
@@ -109,17 +121,23 @@ function showEMessage(msg){
     $.each(logs, function(index,object){
       var tr = $('<tr class=row title="Communication note submitted on: '+object['Timestamp']+'"></tr>');
       $.each(object,function(key,value){
-        if(key=='Timestamp'){}
-        else{
-        if(key=='DurationOfComm'){
-          value = Math.ceil(value/60);
-        }
-        $('<td id="'+key+'" >'+value+'</td>').appendTo(tr);
+        if(key!='Timestamp'){
+          if(key=='DurationOfComm'){
+            value = Math.ceil(value/60);
+          }
+          if(key=='ClientId'){
+            value += " " + object['ClientName']
+          }
+          if(key!='ClientName')
+            $('<td id="'+key+'" >'+value+'</td>').appendTo(tr);
         }
       });
       tr.appendTo('#commTable tbody');
       
     });
+    console.log(logs)
+    console.log(id)
+    $("#clientName").prop( "disabled", false );
     $("#myBar").hide(150);
   }
   
@@ -155,7 +173,8 @@ function showEMessage(msg){
   
   function refreshData(){
     if($('[name=clientName]').val() != 0)
-      clientInfo(id);
+      google.script.run.withSuccessHandler(displayLogs).loadLogs(id,staffId);
+
   }
 
   function setUser(email){
@@ -167,7 +186,6 @@ function showEMessage(msg){
     obj[item.name] = item.value;
     return obj;
     }, {});
-    console.log(data);
   }
   
   

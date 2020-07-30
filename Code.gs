@@ -39,7 +39,11 @@ function setTitle(name){
 }
 
 function test(){
-  Logger.log(getClientNameDbLog(131));
+  var str = 'Notersdansdoashjdinosad posadijasd  asopdijasopdjw eo[jwqsakdjghs ad oasiduh 92 sa98dyb asdopihsa .hasdo sa.d sadoiajs dm =l oisajd'
+  const emailRegex = /[\w.+-]+@innovativeautism.org/ig
+  Logger.log(loadLogs('All Clients',131));
+
+//  Logger.log(getClientNameDbLog(131));
 }
 
 /*
@@ -235,7 +239,7 @@ function loadLogs(clientId,staffId){
   var conn = connect(dbConnect);
   var stmt = conn.createStatement();
   if(clientId == 'All Clients')
-    var query = "select l.Timestamp,concat(s.FirstName,' ',s.LastName) as StaffName,l.EntityContacted,l.ContactPersonName,l.CommType,date_format(l.DateOfComm,'%m/%e/%Y') as DateOfComm,TIME_FORMAT(l.TimeOfComm,'%I%:%i %p') as TimeOfComm,time_to_sec(l.DurationOfComm) as DurationOfComm,l.CommNote,l.DocumentReceived from communications_log l inner join client c on l.ClientId=c.ClientId inner join staff s on l.StaffId=s.StaffId where l.StaffId ="+staffId+" order by l.DateOfComm DESC,l.TimeOfComm DESC;";
+    var query = "select l.ClientId,concat(c.FirstName,' ',c.LastName) as ClientName,l.Timestamp,concat(s.FirstName,' ',s.LastName) as StaffName,l.EntityContacted,l.ContactPersonName,l.CommType,date_format(l.DateOfComm,'%m/%e/%Y') as DateOfComm,TIME_FORMAT(l.TimeOfComm,'%I%:%i %p') as TimeOfComm,time_to_sec(l.DurationOfComm) as DurationOfComm,l.CommNote,l.DocumentReceived from communications_log l inner join client c on l.ClientId=c.ClientId inner join staff s on l.StaffId=s.StaffId where l.StaffId ="+staffId+" order by l.DateOfComm DESC,l.TimeOfComm DESC;";
   else
     var query = "select l.Timestamp,concat(s.FirstName,' ',s.LastName) as StaffName,l.EntityContacted,l.ContactPersonName,l.CommType,date_format(l.DateOfComm,'%m/%e/%Y') as DateOfComm,TIME_FORMAT(l.TimeOfComm,'%I%:%i %p') as TimeOfComm,time_to_sec(l.DurationOfComm) as DurationOfComm,l.CommNote,l.DocumentReceived from communications_log l inner join client c on l.ClientId=c.ClientId inner join staff s on l.StaffId=s.StaffId where l.ClientId ="+clientId+" order by l.DateOfComm DESC,l.TimeOfComm DESC;";
   var data = stmt.executeQuery(query);
@@ -243,7 +247,11 @@ function loadLogs(clientId,staffId){
   var arr = [];
   var obj = {};
   while(data.next()){
-    
+  
+  if(clientId == 'All Clients'){
+  obj['ClientId'] = data.getString('ClientId');
+  obj['ClientName'] = data.getString('ClientName');
+  }
   obj['Timestamp'] = data.getString('Timestamp');
   obj['StaffName'] = data.getString('StaffName');
   obj['EntityContacted'] = data.getString('EntityContacted');     
@@ -271,4 +279,15 @@ function loadLogs(clientId,staffId){
   var json = JSON.stringify(arr);
   return json;
   console.info('Loading Logs based on selected option');
+}
+
+function tagNotes(recipients, title, data){
+  const r = recipients.join(', ');
+  const t = "Tagged in Communication Note: " + title
+  const body = 'Client Name/ID: ' + title+"\nEntity Contacted: " + data['entityContacted'] + "\nContact Person: " + data['contactName'] +"\nCommuncation Type: "+ data['communicationType'] + "\nDate of Communication: " + data['dateOfCommunication'] +
+                  '\nTime of Communication: ' + data['timeOfCommunication'] + "\nDuration of Communication: " + data['durOfCommunication'] + "\nDocuments Received: " + data['documentsReceived'] + "\nCommunication Notes: " + data['communicationNotes']
+  GmailApp.sendEmail(r, title, body); 
+}
+function logData(data){
+  console.info('User '+activeUser+' is attempting to log this dataset. '+JSON.stringify(data)+'')
 }
